@@ -6,49 +6,55 @@ AI 编程助手统一配置管理器。编辑一个文件，同步到所有 AI �
 
 ## 支持的工具
 
-| 工具 | Instructions | Skills | Agents | Rules | Commands | Prompts |
-|------|:------:|:------:|:------:|:-----:|:--------:|:-------:|
-| Claude Code | ✓ | ✓ | | | ✓ | |
-| Cursor | ✓ | ✓ | | | | ✓ |
-| GitHub Copilot | ✓ | | | | | |
-| Factory Droid | ✓ | | | | | |
-| Gemini CLI | ✓ | ✓ | | | ✓ | |
-| Windsurf | ✓ | ✓ | ✓ | ✓ | | |
-| Kiro | ✓ | | ✓ | | | |
-| Qodo | ✓ | | ✓ | | | |
-| Antigravity | ✓ | ✓ | | | ✓ | |
-| Continue | ✓ | | | ✓ | | ✓ |
-| Cline | ✓ | | | ✓ | | ✓ |
-| Roo Code | ✓ | | | ✓ | | |
-| Sourcegraph Cody | ✓ | | | | ✓ | |
-| CodeGPT | ✓ | | | | | ✓ |
-| GPT Engineer | ✓ | | | | | ✓ |
-| Smol Developer | ✓ | | | | | ✓ |
-| Amp | ✓ | | | | | |
-| Trae | ✓ | | | | | |
-| OpenCode | ✓ | | | | | |
-| OpenAI Codex | ✓ | | | | | |
-| Aider | ✓ | | | | | |
-| Codeium | ✓ | | | | | |
-| TabNine | ✓ | | | | | |
-| Zed | ✓ | | | | | |
-| Aide | ✓ | | | | | |
-| PearAI | ✓ | | | | | |
-| Supermaven | ✓ | | | | | |
-| CodeStory | ✓ | | | | | |
-| Double | ✓ | | | | | |
-| Blackbox AI | ✓ | | | | | |
-| Amazon Q | ✓ | | | | | |
-| Copilot Workspace | ✓ | | | | | |
-| Goose AI | ✓ | | | | | |
-| Mentat | ✓ | | | | | |
-| Melty | ✓ | | | | | |
-| Void | ✓ | | | | | |
-| Qoder | ✓ | | | | | |
+| 工具              | Instructions | Skills | Agents | Rules | Commands | Prompts |
+| ----------------- | :----------: | :----: | :----: | :---: | :------: | :-----: |
+| Claude Code       |      ✓       |   ✓    |        |       |    ✓     |         |
+| Cursor            |      ✓       |   ✓    |        |       |          |    ✓    |
+| GitHub Copilot    |      ✓       |        |        |       |          |         |
+| Factory Droid     |      ✓       |        |        |       |          |         |
+| Gemini CLI        |      ✓       |   ✓    |        |       |    ✓     |         |
+| Windsurf          |      ✓       |   ✓    |   ✓    |   ✓   |          |         |
+| Kiro              |      ✓       |        |   ✓    |       |          |         |
+| Qodo              |      ✓       |        |   ✓    |       |          |         |
+| Antigravity       |      ✓       |   ✓    |        |       |    ✓     |         |
+| Continue          |      ✓       |        |        |   ✓   |          |    ✓    |
+| Cline             |      ✓       |        |        |   ✓   |          |    ✓    |
+| Roo Code          |      ✓       |        |        |   ✓   |          |         |
+| Sourcegraph Cody  |      ✓       |        |        |       |    ✓     |         |
+| CodeGPT           |      ✓       |        |        |       |          |    ✓    |
+| GPT Engineer      |      ✓       |        |        |       |          |    ✓    |
+| Smol Developer    |      ✓       |        |        |       |          |    ✓    |
+| Amp               |      ✓       |        |        |       |          |         |
+| Trae              |      ✓       |        |        |       |          |         |
+| OpenCode          |      ✓       |        |        |       |          |         |
+| OpenAI Codex      |      ✓       |        |        |       |          |         |
+| Aider             |      ✓       |        |        |       |          |         |
+| Codeium           |      ✓       |        |        |       |          |         |
+| TabNine           |      ✓       |        |        |       |          |         |
+| Zed               |      ✓       |        |        |       |          |         |
+| Aide              |      ✓       |        |        |       |          |         |
+| PearAI            |      ✓       |        |        |       |          |         |
+| Supermaven        |      ✓       |        |        |       |          |         |
+| CodeStory         |      ✓       |        |        |       |          |         |
+| Double            |      ✓       |        |        |       |          |         |
+| Blackbox AI       |      ✓       |        |        |       |          |         |
+| Amazon Q          |      ✓       |        |        |       |          |         |
+| Copilot Workspace |      ✓       |        |        |       |          |         |
+| Goose AI          |      ✓       |        |        |       |          |         |
+| Mentat            |      ✓       |        |        |       |          |         |
+| Melty             |      ✓       |        |        |       |          |         |
+| Void              |      ✓       |        |        |       |          |         |
+| Qoder             |      ✓       |        |        |       |          |         |
 
 ## 安装
 
-### npm / pnpm / yarn / bun
+### curl
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/nanxiaobei/ai-global/main/install.sh | bash
+```
+
+### npm
 
 ```bash
 npm install -g ai-global
@@ -60,12 +66,6 @@ yarn global add ai-global
 bun add -g ai-global
 ```
 
-### curl
-
-```bash
-curl -fsSL https://raw.githubusercontent.com/nanxiaobei/ai-global/main/install.sh | bash
-```
-
 ## 使用方法
 
 ### 首次运行
@@ -75,6 +75,7 @@ ai-global
 ```
 
 这将会：
+
 1. 扫描系统中已安装的 AI 工具
 2. 备份原始配置到 `~/.ai-global/backups/`
 3. 合并所有工具的 instructions/skills/agents/rules/commands/prompts
@@ -90,23 +91,23 @@ ai-global
 
 ### 命令列表
 
-| 命令 | 说明 |
-|------|------|
-| `ai-global` | 扫描、合并并更新软链（默认） |
-| `ai-global status` | 显示软链状态 |
-| `ai-global list` | 列出支持的工具 |
-| `ai-global backups` | 列出可用的备份 |
-| `ai-global restore <tool>` | 恢复某个工具的原始配置 |
-| `ai-global restore all` | 恢复所有工具 |
-| `ai-global skill <source>` | 添加技能（文件或 GitHub 仓库） |
-| `ai-global agent <source>` | 添加代理 |
-| `ai-global rule <source>` | 添加规则 |
-| `ai-global command <source>` | 添加命令 |
-| `ai-global prompt <source>` | 添加提示词 |
-| `ai-global upgrade` | 升级到最新版本 |
-| `ai-global uninstall` | 彻底卸载 |
-| `ai-global version` | 显示版本号 |
-| `ai-global help` | 显示帮助 |
+| 命令                         | 说明                           |
+| ---------------------------- | ------------------------------ |
+| `ai-global`                  | 扫描、合并并更新软链（默认）   |
+| `ai-global status`           | 显示软链状态                   |
+| `ai-global list`             | 列出支持的工具                 |
+| `ai-global backups`          | 列出可用的备份                 |
+| `ai-global unlink <tool>`    | 恢复某个工具的原始配置         |
+| `ai-global unlink all`       | 恢复所有工具                   |
+| `ai-global skill <source>`   | 添加技能（文件或 GitHub 仓库） |
+| `ai-global agent <source>`   | 添加代理                       |
+| `ai-global rule <source>`    | 添加规则                       |
+| `ai-global command <source>` | 添加命令                       |
+| `ai-global prompt <source>`  | 添加提示词                     |
+| `ai-global upgrade`          | 升级到最新版本                 |
+| `ai-global uninstall`        | 彻底卸载                       |
+| `ai-global version`          | 显示版本号                     |
+| `ai-global help`             | 显示帮助                       |
 
 ### 添加 skill/agent/rule/command/prompt
 
@@ -170,6 +171,7 @@ ai-global uninstall
 ```
 
 这将会：
+
 1. 恢复所有工具的原始配置
 2. 删除 `~/.ai-global` 目录
 3. 移除 `ai-global` 命令

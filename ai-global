@@ -6,9 +6,8 @@
 set -e
 
 CONFIG_DIR="$HOME/.ai-global"
-KNOWN_TOOLS_FILE="$CONFIG_DIR/.known-tools"
 BACKUP_DIR="$CONFIG_DIR/backups"
-INSTRUCTIONS_MD="$CONFIG_DIR/instructions.md"
+GLOBAL_MD="$CONFIG_DIR/global.md"
 SKILLS_DIR="$CONFIG_DIR/skills"
 AGENTS_DIR="$CONFIG_DIR/agents"
 RULES_DIR="$CONFIG_DIR/rules"
@@ -39,7 +38,49 @@ GREEN='\033[0;32m'
 YELLOW='\033[0;33m'
 BLUE='\033[0;34m'
 CYAN='\033[0;36m'
+MAGENTA='\033[0;35m'
+BRIGHT_RED='\033[1;31m'
+BRIGHT_GREEN='\033[1;32m'
+BRIGHT_YELLOW='\033[1;33m'
+BRIGHT_BLUE='\033[1;34m'
+BRIGHT_MAGENTA='\033[1;35m'
+BRIGHT_CYAN='\033[1;36m'
 NC='\033[0m'
+
+# Tool color palette (using xterm-256 colors for more variety)
+# We pick a spread of colors from the 256-color palette (avoiding too dark/grayscale)
+TOOL_COLORS=(
+    "\033[38;5;39m"  "\033[38;5;214m" "\033[38;5;118m" "\033[38;5;171m" "\033[38;5;208m"
+    "\033[38;5;45m"  "\033[38;5;190m" "\033[38;5;161m" "\033[38;5;111m" "\033[38;5;220m"
+    "\033[38;5;75m"  "\033[38;5;202m" "\033[38;5;112m" "\033[38;5;141m" "\033[38;5;210m"
+    "\033[38;5;47m"  "\033[38;5;226m" "\033[38;5;201m" "\033[38;5;81m"  "\033[38;5;215m"
+    "\033[38;5;51m"  "\033[38;5;184m" "\033[38;5;197m" "\033[38;5;105m" "\033[38;5;209m"
+    "\033[38;5;121m" "\033[38;5;227m" "\033[38;5;165m" "\033[38;5;33m"  "\033[38;5;216m"
+    "\033[38;5;159m" "\033[38;5;178m" "\033[38;5;162m" "\033[38;5;117m" "\033[38;5;221m"
+    "\033[38;5;78m"  "\033[38;5;203m" "\033[38;5;113m" "\033[38;5;142m" "\033[38;5;211m"
+    "\033[38;5;159m" "\033[38;5;178m" "\033[38;5;162m" "\033[38;5;117m" "\033[38;5;221m"
+    "\033[38;5;78m"  "\033[38;5;203m" "\033[38;5;113m" "\033[38;5;142m" "\033[38;5;211m"
+)
+
+beautify_path() {
+    local path="$1"
+    if [[ "$path" == "$HOME"* ]]; then
+        local beautified="~${path#$HOME}"
+        echo "${beautified//\/\///}"
+    else
+        echo "$path"
+    fi
+}
+
+get_tool_color() {
+    local name="$1"
+    local sum=0
+    # Simple hash to pick a stable color index
+    for (( i=0; i<${#name}; i++ )); do
+        sum=$((sum + $(printf '%d' "'${name:$i:1}")))
+    done
+    echo -e "${TOOL_COLORS[$((sum % ${#TOOL_COLORS[@]}))]}"
+}
 
 log_info() { echo -e "${BLUE}[INFO]${NC} $1"; }
 log_ok() { echo -e "${GREEN}[OK]${NC} $1"; }
@@ -81,11 +122,11 @@ declare -a KNOWN_PATTERNS=(
     ".blackbox|Blackbox AI|config.json|.|.|.|.|."
     ".amazonq|Amazon Q|instructions.md|.|.|.|.|."
     ".copilot-workspace|Copilot Workspace|instructions.md|.|.|.|.|."
-    ".codex|OpenAI Codex|instructions.md|.|.|.|.|."
-    ".goose|Goose AI|instructions.md|.|.|.|.|."
-    ".mentat|Mentat|instructions.md|.|.|.|.|."
-    ".gpt-engineer|GPT Engineer|instructions.md|.|.|.|.|prompts"
-    ".smol|Smol Developer|instructions.md|.|.|.|.|prompts"
+    ".codex|OpenAI Codex|instructions.md|skills|agents|rules|.|."
+    ".goose|Goose AI|instructions.md|skills|agents|rules|.|."
+    ".mentat|Mentat|instructions.md|skills|agents|rules|.|."
+    ".gpt-engineer|GPT Engineer|instructions.md|skills|agents|rules|.|prompts"
+    ".smol|Smol Developer|instructions.md|skills|agents|rules|.|prompts"
     ".config/opencode|OpenCode Config|instructions.md|.|.|.|.|."
 )
 
@@ -118,6 +159,7 @@ merge_items() {
     local source_dir="$1"
     local target_dir="$2"
     local type="$3"
+    local tool_name="$4"
 
     [[ ! -d "$source_dir" ]] && return
     [[ -L "$source_dir" ]] && return
@@ -140,7 +182,18 @@ merge_items() {
     done
 
     if [[ $merged_count -gt 0 ]]; then
-        log_ok "Merged $merged_count $type from $source_dir"
+        local tool_color=$(get_tool_color "$tool_name")
+        log_ok "Merged $merged_count $type from ${tool_color}${tool_name}${NC}"
+    fi
+}
+
+# Count items in directory (dirs and files)
+count_items() {
+    local dir="$1"
+    if [[ -d "$dir" ]]; then
+        ls -1 "$dir" 2>/dev/null | wc -l | tr -d ' '
+    else
+        echo "0"
     fi
 }
 
@@ -154,24 +207,14 @@ create_symlink() {
     local target_dir=$(dirname "$target")
     mkdir -p "$target_dir"
 
+    # If target exists and is a real file/dir, it should have been backed up by backup_item already.
+    # We remove it to make room for the symlink, avoiding in-place backups.
     if [[ -e "$target" ]] && [[ ! -L "$target" ]]; then
-        local backup="${target}.backup.$(date +%Y%m%d%H%M%S)"
-        mv "$target" "$backup"
-        log_warn "Backed up: $target"
+        rm -rf "$target"
     fi
 
     [[ -L "$target" ]] && rm "$target"
     ln -s "$source" "$target"
-}
-
-# Count files in directory
-count_files() {
-    local dir="$1"
-    if [[ -d "$dir" ]]; then
-        find "$dir" -maxdepth 1 -type f 2>/dev/null | wc -l | tr -d ' '
-    else
-        echo "0"
-    fi
 }
 
 # Show symlink status
@@ -179,93 +222,111 @@ show_status() {
     log_info "Symlink status:"
     echo ""
 
-    if [[ ! -f "$KNOWN_TOOLS_FILE" ]]; then
-        log_info "No tools configured. Run 'ai-global' first."
-        return
-    fi
+    local total_links=0
 
-    echo -e "${BLUE}[instructions]${NC}"
-    while IFS= read -r dir_name; do
-        [[ -z "$dir_name" ]] && continue
-        for pattern in "${KNOWN_PATTERNS[@]}"; do
-            IFS='|' read -r known_dir tool_name instr_file skills agents rules commands prompts <<< "$pattern"
-            if [[ "$dir_name" == "$known_dir" ]]; then
-                if [[ "$instr_file" != "." ]] && [[ "$instr_file" != *.json ]] && [[ "$instr_file" != *.yml ]]; then
-                    local target="$HOME/$dir_name/$instr_file"
-                    if [[ -L "$target" ]]; then
-                        echo -e "  ${GREEN}✓${NC} $target"
-                    elif [[ -e "$target" ]]; then
-                        echo -e "  ${YELLOW}!${NC} $target (not a symlink)"
-                    else
-                        echo -e "  ${RED}✗${NC} $target (missing)"
-                    fi
+    # Instructions
+    local instr_output=""
+    for pattern in "${KNOWN_PATTERNS[@]}"; do
+        local p_dir p_name p_instr p_skills p_agents p_rules p_cmds p_prompts
+        IFS='|' read -r p_dir p_name p_instr p_skills p_agents p_rules p_cmds p_prompts <<< "$pattern"
+
+        if [[ "$p_instr" != "." ]] && [[ "$p_instr" != *.json ]] && [[ "$p_instr" != *.yml ]]; then
+            local target="$HOME/$p_dir/$p_instr"
+            if [[ -L "$target" ]]; then
+                local link_target=$(readlink "$target" 2>/dev/null || true)
+                if [[ "$link_target" == *".ai-global"* ]]; then
+                    local tool_color=$(get_tool_color "$p_name")
+                    instr_output+="  ${tool_color}✓ $(beautify_path "$target")${NC}\n"
+                    ((total_links++))
                 fi
-                break
             fi
-        done
-    done < "$KNOWN_TOOLS_FILE"
-
-    for type_name in skills agents rules commands prompts; do
-        echo -e "\n${BLUE}[$type_name]${NC}"
-        while IFS= read -r dir_name; do
-            [[ -z "$dir_name" ]] && continue
-            for pattern in "${KNOWN_PATTERNS[@]}"; do
-                IFS='|' read -r known_dir tool_name instr_file skills agents rules commands prompts <<< "$pattern"
-                if [[ "$dir_name" == "$known_dir" ]]; then
-                    local type_dir=""
-                    case "$type_name" in
-                        skills) type_dir="$skills" ;;
-                        agents) type_dir="$agents" ;;
-                        rules) type_dir="$rules" ;;
-                        commands) type_dir="$commands" ;;
-                        prompts) type_dir="$prompts" ;;
-                    esac
-                    if [[ "$type_dir" != "." ]]; then
-                        local target="$HOME/$dir_name/$type_dir"
-                        if [[ -L "$target" ]]; then
-                            echo -e "  ${GREEN}✓${NC} $target"
-                        elif [[ -e "$target" ]]; then
-                            echo -e "  ${YELLOW}!${NC} $target (not a symlink)"
-                        else
-                            echo -e "  ${RED}✗${NC} $target (missing)"
-                        fi
-                    fi
-                    break
-                fi
-            done
-        done < "$KNOWN_TOOLS_FILE"
+        fi
     done
 
+    if [[ -n "$instr_output" ]]; then
+        echo -e "${BLUE}[global.md]${NC}"
+        echo -e -n "$instr_output"
+    fi
+
+    for type_name in skills agents rules commands prompts; do
+        local type_output=""
+        for pattern in "${KNOWN_PATTERNS[@]}"; do
+            local p_dir p_name p_instr p_skills p_agents p_rules p_cmds p_prompts
+            IFS='|' read -r p_dir p_name p_instr p_skills p_agents p_rules p_cmds p_prompts <<< "$pattern"
+
+            local type_dir=""
+            case "$type_name" in
+                skills)   type_dir="$p_skills" ;;
+                agents)   type_dir="$p_agents" ;;
+                rules)    type_dir="$p_rules" ;;
+                commands) type_dir="$p_cmds" ;;
+                prompts)  type_dir="$p_prompts" ;;
+            esac
+
+            if [[ "$type_dir" != "." ]]; then
+                local target="$HOME/$p_dir/$type_dir"
+                if [[ -L "$target" ]]; then
+                    local link_target=$(readlink "$target" 2>/dev/null || true)
+                    if [[ "$link_target" == *".ai-global"* ]]; then
+                        local tool_color=$(get_tool_color "$p_name")
+                        type_output+="  ${tool_color}✓ $(beautify_path "$target")${NC}\n"
+                        ((total_links++))
+                    fi
+                fi
+            fi
+        done
+
+        if [[ -n "$type_output" ]]; then
+            echo -e "\n${BLUE}[$type_name]${NC}"
+            echo -e -n "$type_output"
+        fi
+    done
+
+    if [[ $total_links -eq 0 ]]; then
+        echo "  No active symlinks found."
+    fi
+
     echo ""
-    log_info "Shared: skills=$(count_files "$SKILLS_DIR"), agents=$(count_files "$AGENTS_DIR"), rules=$(count_files "$RULES_DIR"), commands=$(count_files "$COMMANDS_DIR"), prompts=$(count_files "$PROMPTS_DIR")"
+    log_info "Shared items: skills=$(count_items "$SKILLS_DIR"), agents=$(count_items "$AGENTS_DIR"), rules=$(count_items "$RULES_DIR"), commands=$(count_items "$COMMANDS_DIR"), prompts=$(count_items "$PROMPTS_DIR")"
 }
 
 # List supported tools
 list_supported() {
     log_info "Supported AI tools:"
     echo ""
-    printf "  ${BLUE}%-22s${NC} %-20s %-6s %-6s %-6s %-6s %-6s %s\n" "Directory" "Tool" "Skills" "Agents" "Rules" "Cmds" "Prompts" "Status"
-    echo "  ----------------------------------------------------------------------------------------------------------------"
+    printf "  ${BLUE}%-22s %-20s %-10s %-10s %-10s %-10s %-10s %s${NC}\n" "Directory" "Tool" "Skills" "Agents" "Rules" "Cmds" "Prompts" "Status"
+    echo "  --------------------------------------------------------------------------------------------------------------------------------"
 
     for pattern in "${KNOWN_PATTERNS[@]}"; do
-        IFS='|' read -r dir_name tool_name instr_file skills agents rules commands prompts <<< "$pattern"
-        local full_path="$HOME/$dir_name"
+        local p_dir p_name p_instr p_skills p_agents p_rules p_cmds p_prompts
+        IFS='|' read -r p_dir p_name p_instr p_skills p_agents p_rules p_cmds p_prompts <<< "$pattern"
+        local full_path="$HOME/$p_dir"
 
-        local s="." a="." r="." c="." p="."
-        [[ "$skills" != "." ]] && s="✓"
-        [[ "$agents" != "." ]] && a="✓"
-        [[ "$rules" != "." ]] && r="✓"
-        [[ "$commands" != "." ]] && c="✓"
-        [[ "$prompts" != "." ]] && p="✓"
-
-        local status=""
+        local s_str="." a_str="." r_str="." c_str="." p_str="."
         if [[ -d "$full_path" ]]; then
-            status="${GREEN}Installed${NC}"
-        else
-            status="${YELLOW}Not found${NC}"
+            [[ "$p_skills" != "." && -d "$full_path/$p_skills" ]] && s_str="✓"
+            [[ "$p_agents" != "." && -d "$full_path/$p_agents" ]] && a_str="✓"
+            [[ "$p_rules" != "." && -d "$full_path/$p_rules" ]] && r_str="✓"
+            [[ "$p_cmds" != "." && -d "$full_path/$p_cmds" ]] && c_str="✓"
+            # Prompts can be a file or dir
+            [[ "$p_prompts" != "." && -e "$full_path/$p_prompts" ]] && p_str="✓"
         fi
 
-        printf "  %-22s %-20s %-6s %-6s %-6s %-6s %-6s %b\n" "$dir_name" "$tool_name" "$s" "$a" "$r" "$c" "$p" "$status"
+        local status=""
+        local tool_color=""
+        if [[ -d "$full_path" ]]; then
+            status="${GREEN}Installed${NC}"
+            tool_color=$(get_tool_color "$p_name")
+        else
+            status="${YELLOW}Not found${NC}"
+            tool_color="${NC}"
+        fi
+
+        # Use manual padding because printf handles multibyte characters (✓) by byte count in Bash 3.2.
+        # Each category block matches the header's "%-10s " (11 characters total).
+        # We use indicator + 10 spaces = 11 characters.
+        printf "  %b%-22s %-20s%b %s          %s          %s          %s          %s          %b\n" \
+            "$tool_color" "$p_dir" "$p_name" "$NC" "$s_str" "$a_str" "$r_str" "$c_str" "$p_str" "$status"
     done
     echo ""
 }
@@ -275,22 +336,25 @@ list_backups() {
     log_info "Available backups:"
     echo ""
 
-    if [[ ! -d "$BACKUP_DIR" ]] || [[ -z "$(ls -A "$BACKUP_DIR" 2>/dev/null)" ]]; then
+    # Use ls -A to catch hidden files/dirs (starting with .)
+    local backups_list=$(ls -A "$BACKUP_DIR" 2>/dev/null || true)
+
+    if [[ -z "$backups_list" ]]; then
         echo "  No backups found"
         echo ""
         return
     fi
 
-    printf "  ${BLUE}%-25s${NC} %-12s %s\n" "Tool" "Type" "Backup File"
-    echo "  ----------------------------------------------------------------"
+    printf "  ${BLUE}%-25s %-12s %s${NC}\n" "Tool" "Type" "Backup File"
+    echo "  --------------------------------------------------------------------"
 
-    for backup in "$BACKUP_DIR"/*; do
-        [[ ! -e "$backup" ]] && continue
-        local filename=$(basename "$backup")
+    while read -r filename; do
+        [[ -z "$filename" ]] && continue
         local tool_name=""
         local type=""
 
-        if [[ "$filename" =~ ^(.+)\.([^.]+)\.([0-9]+)$ ]]; then
+        # Improved regex to handle various path characters
+        if [[ "$filename" =~ ^(.+)\.([^\.]+)\.([0-9]+)$ ]]; then
             tool_name="${BASH_REMATCH[1]}"
             type="${BASH_REMATCH[2]}"
         else
@@ -298,8 +362,9 @@ list_backups() {
             type="unknown"
         fi
 
-        printf "  %-25s %-12s %s\n" "$tool_name" "$type" "$filename"
-    done
+        local tool_color=$(get_tool_color "${tool_name//_/ }")
+        printf "  %s%-25s %-12s %s%b\n" "$tool_color" "$tool_name" "$type" "$filename" "$NC"
+    done <<< "$backups_list"
     echo ""
 }
 
@@ -329,15 +394,15 @@ collect_instructions() {
     done
 
     if [[ $found_count -gt 0 ]]; then
-        echo -e "$merged_content" > "$INSTRUCTIONS_MD"
+        echo -e "$merged_content" > "$GLOBAL_MD"
         log_ok "Merged instructions from $found_count tool(s)"
     else
-        cat > "$INSTRUCTIONS_MD" << 'EOF'
+        cat > "$GLOBAL_MD" << 'EOF'
 # AI Assistant Instructions
 
 <!-- Add your instructions here. They will sync to all AI tools. -->
 EOF
-        log_ok "Created: $INSTRUCTIONS_MD"
+        log_ok "Created: $GLOBAL_MD"
     fi
 }
 
@@ -348,11 +413,7 @@ update_tools() {
 
     mkdir -p "$SKILLS_DIR" "$AGENTS_DIR" "$RULES_DIR" "$COMMANDS_DIR" "$PROMPTS_DIR" "$BACKUP_DIR"
 
-    if [[ ! -f "$INSTRUCTIONS_MD" ]]; then
-        collect_instructions
-    fi
-
-    > "$KNOWN_TOOLS_FILE"
+    collect_instructions
 
     local tool_count=0
 
@@ -361,7 +422,8 @@ update_tools() {
         local full_path="$HOME/$dir_name"
 
         if [[ -d "$full_path" ]]; then
-            log_ok "Found: $tool_name"
+            local color=$(get_tool_color "$tool_name")
+            echo -e "${GREEN}[OK]${NC} ${color}Found: $tool_name${NC}"
             ((tool_count++))
 
             if [[ "$instr_file" != "." ]] && [[ "$instr_file" != *.json ]] && [[ "$instr_file" != *.yml ]]; then
@@ -389,11 +451,9 @@ update_tools() {
                         commands) target_dir="$COMMANDS_DIR" ;;
                         prompts) target_dir="$PROMPTS_DIR" ;;
                     esac
-                    merge_items "$path" "$target_dir" "$type_name"
+                    merge_items "$path" "$target_dir" "$type_name" "$tool_name"
                 fi
             done
-
-            echo "$dir_name" >> "$KNOWN_TOOLS_FILE"
         fi
     done
 
@@ -405,47 +465,43 @@ update_tools() {
     echo ""
     log_info "Creating symlinks..."
 
-    while IFS= read -r dir_name; do
-        [[ -z "$dir_name" ]] && continue
+    for pattern in "${KNOWN_PATTERNS[@]}"; do
+        IFS='|' read -r dir_name tool_name instr_file skills agents rules commands prompts <<< "$pattern"
+        local full_path="$HOME/$dir_name"
 
-        for pattern in "${KNOWN_PATTERNS[@]}"; do
-            IFS='|' read -r known_dir tool_name instr_file skills agents rules commands prompts <<< "$pattern"
-
-            if [[ "$dir_name" == "$known_dir" ]]; then
-                if [[ "$instr_file" != "." ]] && [[ "$instr_file" != *.json ]] && [[ "$instr_file" != *.yml ]]; then
-                    local target="$HOME/$dir_name/$instr_file"
-                    create_symlink "$INSTRUCTIONS_MD" "$target"
-                    log_ok "$target -> instructions.md"
-                fi
-
-                for type_name in skills agents rules commands prompts; do
-                    local type_dir=""
-                    local source_dir=""
-                    case "$type_name" in
-                        skills) type_dir="$skills"; source_dir="$SKILLS_DIR" ;;
-                        agents) type_dir="$agents"; source_dir="$AGENTS_DIR" ;;
-                        rules) type_dir="$rules"; source_dir="$RULES_DIR" ;;
-                        commands) type_dir="$commands"; source_dir="$COMMANDS_DIR" ;;
-                        prompts) type_dir="$prompts"; source_dir="$PROMPTS_DIR" ;;
-                    esac
-                    if [[ "$type_dir" != "." ]]; then
-                        local target="$HOME/$dir_name/$type_dir"
-                        create_symlink "$source_dir" "$target"
-                        log_ok "$target -> $type_name/"
-                    fi
-                done
-
-                break
+        if [[ -d "$full_path" ]]; then
+            local tool_color=$(get_tool_color "$tool_name")
+            if [[ "$instr_file" != "." ]] && [[ "$instr_file" != *.json ]] && [[ "$instr_file" != *.yml ]]; then
+                local target="$HOME/$dir_name/$instr_file"
+                create_symlink "$GLOBAL_MD" "$target"
+                printf "  ${tool_color}✓ %-40s -> %s${NC}\n" "$(beautify_path "$target")" "$(beautify_path "$GLOBAL_MD")"
             fi
-        done
-    done < "$KNOWN_TOOLS_FILE"
+
+            for type_name in skills agents rules commands prompts; do
+                local type_dir=""
+                local source_dir=""
+                case "$type_name" in
+                    skills) type_dir="$skills"; source_dir="$SKILLS_DIR" ;;
+                    agents) type_dir="$agents"; source_dir="$AGENTS_DIR" ;;
+                    rules) type_dir="$rules"; source_dir="$RULES_DIR" ;;
+                    commands) type_dir="$commands"; source_dir="$COMMANDS_DIR" ;;
+                    prompts) type_dir="$prompts"; source_dir="$PROMPTS_DIR" ;;
+                esac
+                if [[ "$type_dir" != "." ]]; then
+                    local target="$HOME/$dir_name/$type_dir"
+                    create_symlink "$source_dir" "$target"
+                    printf "  ${tool_color}✓ %-40s -> %s${NC}\n" "$(beautify_path "$target")" "$(beautify_path "$source_dir")/"
+                fi
+            done
+        fi
+    done
 
     echo ""
-    log_info "Done! Shared: skills=$(count_files "$SKILLS_DIR"), agents=$(count_files "$AGENTS_DIR"), rules=$(count_files "$RULES_DIR"), commands=$(count_files "$COMMANDS_DIR"), prompts=$(count_files "$PROMPTS_DIR")"
+    log_info "Done! Shared: skills=$(count_items "$SKILLS_DIR"), agents=$(count_items "$AGENTS_DIR"), rules=$(count_items "$RULES_DIR"), commands=$(count_items "$COMMANDS_DIR"), prompts=$(count_items "$PROMPTS_DIR")"
 }
 
-# Restore a single tool
-restore_single_tool() {
+# Unlink a single tool
+unlink_single_tool() {
     local tool_name="$1"
     local dir_name="$2"
     local instr_file="$3"
@@ -454,19 +510,26 @@ restore_single_tool() {
     local rules="$6"
     local commands="$7"
     local prompts="$8"
+    local silent="${9:-false}"
 
-    log_ok "Restoring: $tool_name"
     local backup_name=$(echo "$dir_name" | tr '/' '_')
+    local worked=false
 
+    # Check for instructions link
     if [[ "$instr_file" != "." ]]; then
         local target="$HOME/$dir_name/$instr_file"
         if [[ -L "$target" ]]; then
-            rm "$target"
-            local backup_file=$(ls -t "$BACKUP_DIR"/${backup_name}.instructions.* 2>/dev/null | head -1)
-            [[ -f "$backup_file" ]] && cp "$backup_file" "$target"
+            local link_target=$(readlink "$target" 2>/dev/null || true)
+            if [[ "$link_target" == *".ai-global"* ]]; then
+                rm "$target"
+                local backup_file=$(ls -t "$BACKUP_DIR"/${backup_name}.instructions.* 2>/dev/null | head -1)
+                [[ -f "$backup_file" ]] && cp "$backup_file" "$target"
+                worked=true
+            fi
         fi
     fi
 
+    # Check for components links
     for type_name in skills agents rules commands prompts; do
         local type_dir=""
         case "$type_name" in
@@ -479,63 +542,85 @@ restore_single_tool() {
         if [[ "$type_dir" != "." ]]; then
             local target="$HOME/$dir_name/$type_dir"
             if [[ -L "$target" ]]; then
-                rm "$target"
-                local backup_file=$(ls -td "$BACKUP_DIR"/${backup_name}.${type_name}.* 2>/dev/null | head -1)
-                if [[ -d "$backup_file" ]]; then
-                    cp -r "$backup_file" "$target"
-                else
-                    mkdir -p "$target"
+                local link_target=$(readlink "$target" 2>/dev/null || true)
+                if [[ "$link_target" == *".ai-global"* ]]; then
+                    rm "$target"
+                    local backup_file=$(ls -td "$BACKUP_DIR"/${backup_name}.${type_name}.* 2>/dev/null | head -1)
+                    if [[ -d "$backup_file" ]]; then
+                        cp -r "$backup_file" "$target"
+                    fi
+                    worked=true
                 fi
             fi
         fi
     done
-}
 
-# Restore all tools
-restore_all_tools() {
-    log_info "Restoring all tools..."
-    echo ""
-
-    if [[ ! -f "$KNOWN_TOOLS_FILE" ]]; then
-        log_info "No tools to restore"
-        return
+    # Check for backups persistence
+    local has_backups=false
+    if [[ -n "$(ls "$BACKUP_DIR"/${backup_name}.* 2>/dev/null)" ]]; then
+        has_backups=true
+        rm -rf "$BACKUP_DIR"/${backup_name}.* 2>/dev/null || true
     fi
 
-    local restored_count=0
+    if [[ "$worked" == true ]] || [[ "$has_backups" == true ]]; then
+        if [[ "$silent" != "true" ]]; then
+            local color=$(get_tool_color "$tool_name")
+            echo -e "${GREEN}[OK]${NC} ${color}Unlinked: $tool_name${NC}"
+        fi
+        return 0
+    fi
 
-    while IFS= read -r dir_name; do
-        [[ -z "$dir_name" ]] && continue
-
-        for pattern in "${KNOWN_PATTERNS[@]}"; do
-            IFS='|' read -r known_dir tool_name instr_file skills agents rules commands prompts <<< "$pattern"
-
-            if [[ "$dir_name" == "$known_dir" ]]; then
-                restore_single_tool "$tool_name" "$dir_name" "$instr_file" "$skills" "$agents" "$rules" "$commands" "$prompts"
-                ((restored_count++))
-                break
-            fi
-        done
-    done < "$KNOWN_TOOLS_FILE"
-
-    rm -f "$KNOWN_TOOLS_FILE"
-
-    echo ""
-    log_info "Restored $restored_count tool(s). Run 'ai-global' to re-link."
+    return 1
 }
 
-# Restore a specific tool
-restore_tool() {
+# Unlink all tools
+unlink_all_tools() {
+    log_info "Unlinking tools..."
+    echo ""
+
+    local unlinked_count=0
+    # Scan all known patterns to find and remove any symlinks
+    for pattern in "${KNOWN_PATTERNS[@]}"; do
+        IFS='|' read -r dir_name tool_name instr_file skills agents rules commands prompts <<< "$pattern"
+        if unlink_single_tool "$tool_name" "$dir_name" "$instr_file" "$skills" "$agents" "$rules" "$commands" "$prompts"; then
+            ((unlinked_count++))
+        fi
+    done
+
+    # Final sweep for any remaining symlinks pointing to .ai-global
+    find "$HOME" -maxdepth 3 -type l 2>/dev/null | while read -r link; do
+        local target=$(readlink "$link" 2>/dev/null || true)
+        if [[ "$target" == *".ai-global"* ]]; then
+            rm "$link"
+            log_ok "Removed unknown symlink: $(beautify_path "$link")"
+            ((unlinked_count++))
+        fi
+    done
+
+    # Clear all backups as requested
+    rm -rf "$BACKUP_DIR"/* 2>/dev/null || true
+
+    echo ""
+    if [[ $unlinked_count -gt 0 ]]; then
+        log_info "Unlinked $unlinked_count item(s) and cleared backups. Shared data preserved."
+    else
+        log_info "No active symlinks found. Backups cleared."
+    fi
+}
+
+# Unlink a specific tool
+unlink_tool() {
     local tool_query="$1"
 
     if [[ -z "$tool_query" ]]; then
-        log_error "Usage: ai-global restore <tool> or ai-global restore all"
+        log_error "Usage: ai-global unlink <tool> or ai-global unlink all"
         echo ""
         list_backups
         return 1
     fi
 
     if [[ "$tool_query" == "all" ]]; then
-        restore_all_tools
+        unlink_all_tools
         return
     fi
 
@@ -547,15 +632,9 @@ restore_tool() {
         local query_lower=$(echo "$tool_query" | tr '[:upper:]' '[:lower:]')
 
         if [[ "$tool_lower" == *"$query_lower"* ]] || [[ "$dir_name" == *"$query_lower"* ]]; then
-            log_info "Restoring $tool_name..."
-            restore_single_tool "$tool_name" "$dir_name" "$instr_file" "$skills" "$agents" "$rules" "$commands" "$prompts"
-
-            if [[ -f "$KNOWN_TOOLS_FILE" ]]; then
-                grep -v "^$dir_name$" "$KNOWN_TOOLS_FILE" > "$KNOWN_TOOLS_FILE.tmp" 2>/dev/null || true
-                mv "$KNOWN_TOOLS_FILE.tmp" "$KNOWN_TOOLS_FILE"
+            if ! unlink_single_tool "$tool_name" "$dir_name" "$instr_file" "$skills" "$agents" "$rules" "$commands" "$prompts"; then
+                log_info "$tool_name is not currently linked."
             fi
-
-            log_info "$tool_name restored"
             found=true
             break
         fi
@@ -769,7 +848,7 @@ add_item() {
 # Uninstall
 uninstall() {
     log_warn "This will:"
-    echo "  1. Restore all tools to original configuration"
+    echo "  1. Unlink all tools to original configuration"
     echo "  2. Remove ~/.ai-global directory"
     echo "  3. Remove ai-global from PATH"
     echo ""
@@ -781,9 +860,7 @@ uninstall() {
         return
     fi
 
-    if [[ -f "$KNOWN_TOOLS_FILE" ]]; then
-        restore_all_tools
-    fi
+    unlink_all_tools
 
     [[ -L /usr/local/bin/ai-global ]] && rm -f /usr/local/bin/ai-global
     [[ -L "$HOME/.local/bin/ai-global" ]] && rm -f "$HOME/.local/bin/ai-global"
@@ -817,10 +894,16 @@ upgrade() {
 
     log_info "Upgrading: $VERSION -> $remote_version"
 
+    local current_script="$0"
+    # If running via symlink, update the target
+    if [[ -L "$current_script" ]]; then
+        current_script=$(readlink "$current_script")
+    fi
+
     local tmp_file=$(mktemp)
     if curl -fsSL "https://raw.githubusercontent.com/nanxiaobei/ai-global/main/ai-global" -o "$tmp_file" 2>/dev/null; then
         chmod +x "$tmp_file"
-        mv "$tmp_file" "$CONFIG_DIR/ai-global"
+        mv "$tmp_file" "$current_script"
         log_ok "Upgraded to v$remote_version"
     else
         rm -f "$tmp_file"
@@ -831,47 +914,32 @@ upgrade() {
 
 # Show help
 show_help() {
-    cat << EOF
-AI-Global: Unified AI Tools Configuration Manager v$VERSION
-
-Usage: ai-global [command]
-
-Commands:
-  (default)            Scan, merge and update symlinks
-  status               Show symlink status
-  list                 List all supported AI tools
-  backups              List available backups
-  restore <tool>       Restore a tool's original config
-  restore all          Restore all tools
-  skill <source>       Add a skill (file, GitHub repo, or new)
-  agent <source>       Add an agent
-  rule <source>        Add a rule
-  command <source>     Add a command
-  prompt <source>      Add a prompt
-  upgrade              Upgrade ai-global to latest version
-  uninstall            Completely remove ai-global
-  version              Show version
-  help                 Show this help
-
-Shared directories:
-  ~/.ai-global/instructions.md   Instructions for all tools
-  ~/.ai-global/skills/           Reusable skills
-  ~/.ai-global/agents/           Custom agents
-  ~/.ai-global/rules/            Code rules
-  ~/.ai-global/commands/         Slash commands
-  ~/.ai-global/prompts/          Prompt templates
-
-Examples:
-  ai-global                      # Scan, merge and update symlinks
-  ai-global skill react.md       # Add a local skill file
-  ai-global skill user/repo      # Add skills from GitHub repo (auto-detects skills/ dir)
-  ai-global agent coder.md       # Add an agent
-  ai-global restore claude       # Restore Claude's config
-
-Note: When adding from GitHub, it auto-detects type subdirectories
-       (e.g., skills/, agents/, rules/) if they exist.
-
-EOF
+    echo -e "${BLUE}AI-Global: Unified AI Tools Configuration Manager${NC} v$VERSION"
+    echo ""
+    echo -e "${BLUE}USAGE:${NC}"
+    echo -e "  ai-global [command]"
+    echo ""
+    echo -e "${BLUE}CORE COMMANDS:${NC}"
+    echo -e "  ${GREEN}(default)${NC}           Scan, merge and update symlinks"
+    echo -e "  ${GREEN}status${NC}              Show symlink status"
+    echo -e "  ${GREEN}list${NC}                List all supported AI tools"
+    echo -e "  ${GREEN}backups${NC}             List available backups"
+    echo -e "  ${GREEN}unlink <tool>${NC}       Unlink a tool's original config"
+    echo -e "  ${GREEN}unlink all${NC}          Unlink all tools"
+    echo ""
+    echo -e "${BLUE}RESOURCE MANAGEMENT:${NC}"
+    echo -e "  ${GREEN}skill <source>${NC}      Add a skill (file, GitHub repo, or new)"
+    echo -e "  ${GREEN}agent <source>${NC}      Add an agent"
+    echo -e "  ${GREEN}rule <source>${NC}       Add a rule"
+    echo -e "  ${GREEN}command <source>${NC}    Add a command"
+    echo -e "  ${GREEN}prompt <source>${NC}     Add a prompt"
+    echo ""
+    echo -e "${BLUE}SYSTEM COMMANDS:${NC}"
+    echo -e "  ${GREEN}upgrade${NC}             Upgrade ai-global to latest version"
+    echo -e "  ${GREEN}uninstall${NC}           Completely remove ai-global"
+    echo -e "  ${GREEN}version${NC}             Show version"
+    echo -e "  ${GREEN}help${NC}                Show this help"
+    echo ""
 }
 
 # Main
@@ -883,26 +951,27 @@ main() {
         exit 0
     fi
 
-    if [[ ! -f "$KNOWN_TOOLS_FILE" ]]; then
-        case "$cmd" in
-            help|--help|-h) show_help; exit 0 ;;
-            list) list_supported; exit 0 ;;
-            version|-v|--version) show_version; exit 0 ;;
-            skill|agent|rule|command|prompt|restore|status|backups)
-                log_info "No tools configured yet. Running initial scan..."
+    case "$cmd" in
+        help|--help|-h) show_help; exit 0 ;;
+        list) list_supported; exit 0 ;;
+        version|-v|--version) show_version; exit 0 ;;
+        skill|agent|rule|command|prompt|unlink|status|backups|upgrade|uninstall)
+            if [[ ! -d "$CONFIG_DIR" ]]; then
+                log_info "No configuration found. Running initial scan..."
                 update_tools
-                [[ "$cmd" == "skill" || "$cmd" == "agent" || "$cmd" == "rule" || "$cmd" == "command" || "$cmd" == "prompt" ]] || exit 0
-                ;;
-            *) cmd="update" ;;
-        esac
-    fi
+                [[ "$cmd" == "skill" || "$cmd" == "agent" || "$cmd" == "rule" || "$cmd" == "command" || "$cmd" == "prompt" || "$cmd" == "status" ]] || exit 0
+            fi
+            ;;
+        version|-v|--version|help|--help|-h) ;;
+        *) cmd="update" ;;
+    esac
 
     case "$cmd" in
         update)       update_tools ;;
         status)       show_status ;;
         list)         list_supported ;;
         backups)      list_backups ;;
-        restore)      restore_tool "$2" ;;
+        unlink)       unlink_tool "$2" ;;
         skill)        add_item "skill" "$2" ;;
         agent)        add_item "agent" "$2" ;;
         rule)         add_item "rule" "$2" ;;

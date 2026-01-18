@@ -6,49 +6,55 @@ Unified configuration manager for AI coding assistants. Edit one file, sync to a
 
 ## Supported Tools
 
-| Tool | Instructions | Skills | Agents | Rules | Commands | Prompts |
-|------|:------:|:------:|:------:|:-----:|:--------:|:-------:|
-| Claude Code | ✓ | ✓ | | | ✓ | |
-| Cursor | ✓ | ✓ | | | | ✓ |
-| GitHub Copilot | ✓ | | | | | |
-| Factory Droid | ✓ | | | | | |
-| Gemini CLI | ✓ | ✓ | | | ✓ | |
-| Windsurf | ✓ | ✓ | ✓ | ✓ | | |
-| Kiro | ✓ | | ✓ | | | |
-| Qodo | ✓ | | ✓ | | | |
-| Antigravity | ✓ | ✓ | | | ✓ | |
-| Continue | ✓ | | | ✓ | | ✓ |
-| Cline | ✓ | | | ✓ | | ✓ |
-| Roo Code | ✓ | | | ✓ | | |
-| Sourcegraph Cody | ✓ | | | | ✓ | |
-| CodeGPT | ✓ | | | | | ✓ |
-| GPT Engineer | ✓ | | | | | ✓ |
-| Smol Developer | ✓ | | | | | ✓ |
-| Amp | ✓ | | | | | |
-| Trae | ✓ | | | | | |
-| OpenCode | ✓ | | | | | |
-| OpenAI Codex | ✓ | | | | | |
-| Aider | ✓ | | | | | |
-| Codeium | ✓ | | | | | |
-| TabNine | ✓ | | | | | |
-| Zed | ✓ | | | | | |
-| Aide | ✓ | | | | | |
-| PearAI | ✓ | | | | | |
-| Supermaven | ✓ | | | | | |
-| CodeStory | ✓ | | | | | |
-| Double | ✓ | | | | | |
-| Blackbox AI | ✓ | | | | | |
-| Amazon Q | ✓ | | | | | |
-| Copilot Workspace | ✓ | | | | | |
-| Goose AI | ✓ | | | | | |
-| Mentat | ✓ | | | | | |
-| Melty | ✓ | | | | | |
-| Void | ✓ | | | | | |
-| Qoder | ✓ | | | | | |
+| Tool              | Instructions | Skills | Agents | Rules | Commands | Prompts |
+| ----------------- | :----------: | :----: | :----: | :---: | :------: | :-----: |
+| Claude Code       |      ✓       |   ✓    |        |       |    ✓     |         |
+| Cursor            |      ✓       |   ✓    |        |       |          |    ✓    |
+| GitHub Copilot    |      ✓       |        |        |       |          |         |
+| Factory Droid     |      ✓       |        |        |       |          |         |
+| Gemini CLI        |      ✓       |   ✓    |        |       |    ✓     |         |
+| Windsurf          |      ✓       |   ✓    |   ✓    |   ✓   |          |         |
+| Kiro              |      ✓       |        |   ✓    |       |          |         |
+| Qodo              |      ✓       |        |   ✓    |       |          |         |
+| Antigravity       |      ✓       |   ✓    |        |       |    ✓     |         |
+| Continue          |      ✓       |        |        |   ✓   |          |    ✓    |
+| Cline             |      ✓       |        |        |   ✓   |          |    ✓    |
+| Roo Code          |      ✓       |        |        |   ✓   |          |         |
+| Sourcegraph Cody  |      ✓       |        |        |       |    ✓     |         |
+| CodeGPT           |      ✓       |        |        |       |          |    ✓    |
+| GPT Engineer      |      ✓       |        |        |       |          |    ✓    |
+| Smol Developer    |      ✓       |        |        |       |          |    ✓    |
+| Amp               |      ✓       |        |        |       |          |         |
+| Trae              |      ✓       |        |        |       |          |         |
+| OpenCode          |      ✓       |        |        |       |          |         |
+| OpenAI Codex      |      ✓       |        |        |       |          |         |
+| Aider             |      ✓       |        |        |       |          |         |
+| Codeium           |      ✓       |        |        |       |          |         |
+| TabNine           |      ✓       |        |        |       |          |         |
+| Zed               |      ✓       |        |        |       |          |         |
+| Aide              |      ✓       |        |        |       |          |         |
+| PearAI            |      ✓       |        |        |       |          |         |
+| Supermaven        |      ✓       |        |        |       |          |         |
+| CodeStory         |      ✓       |        |        |       |          |         |
+| Double            |      ✓       |        |        |       |          |         |
+| Blackbox AI       |      ✓       |        |        |       |          |         |
+| Amazon Q          |      ✓       |        |        |       |          |         |
+| Copilot Workspace |      ✓       |        |        |       |          |         |
+| Goose AI          |      ✓       |        |        |       |          |         |
+| Mentat            |      ✓       |        |        |       |          |         |
+| Melty             |      ✓       |        |        |       |          |         |
+| Void              |      ✓       |        |        |       |          |         |
+| Qoder             |      ✓       |        |        |       |          |         |
 
 ## Installation
 
-### npm / pnpm / yarn / bun
+### curl
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/nanxiaobei/ai-global/main/install.sh | bash
+```
+
+### npm
 
 ```bash
 npm install -g ai-global
@@ -60,12 +66,6 @@ yarn global add ai-global
 bun add -g ai-global
 ```
 
-### curl
-
-```bash
-curl -fsSL https://raw.githubusercontent.com/nanxiaobei/ai-global/main/install.sh | bash
-```
-
 ## Usage
 
 ### First run
@@ -75,6 +75,7 @@ ai-global
 ```
 
 This will:
+
 1. Scan your system for installed AI tools
 2. Backup original configs to `~/.ai-global/backups/`
 3. Merge instructions/skills/agents/rules/commands/prompts from all tools
@@ -90,23 +91,23 @@ Changes take effect immediately - all tools read the same file via symlinks.
 
 ### Commands
 
-| Command | Description |
-|---------|-------------|
-| `ai-global` | Scan, merge and update symlinks (default) |
-| `ai-global status` | Show symlink status |
-| `ai-global list` | List supported tools |
-| `ai-global backups` | List available backups |
-| `ai-global restore <tool>` | Restore a tool's original config |
-| `ai-global restore all` | Restore all tools |
-| `ai-global skill <source>` | Add a skill (file or GitHub repo) |
-| `ai-global agent <source>` | Add an agent |
-| `ai-global rule <source>` | Add a rule |
-| `ai-global command <source>` | Add a command |
-| `ai-global prompt <source>` | Add a prompt |
-| `ai-global upgrade` | Upgrade to latest version |
-| `ai-global uninstall` | Completely remove ai-global |
-| `ai-global version` | Show version |
-| `ai-global help` | Show help |
+| Command                      | Description                               |
+| ---------------------------- | ----------------------------------------- |
+| `ai-global`                  | Scan, merge and update symlinks (default) |
+| `ai-global status`           | Show symlink status                       |
+| `ai-global list`             | List supported tools                      |
+| `ai-global backups`          | List available backups                    |
+| `ai-global unlink <tool>`    | Unlink a tool's original config           |
+| `ai-global unlink all`       | Unlink all tools                          |
+| `ai-global skill <source>`   | Add a skill (file or GitHub repo)         |
+| `ai-global agent <source>`   | Add an agent                              |
+| `ai-global rule <source>`    | Add a rule                                |
+| `ai-global command <source>` | Add a command                             |
+| `ai-global prompt <source>`  | Add a prompt                              |
+| `ai-global upgrade`          | Upgrade to latest version                 |
+| `ai-global uninstall`        | Completely remove ai-global               |
+| `ai-global version`          | Show version                              |
+| `ai-global help`             | Show help                                 |
 
 ### Add skill/agent/rule/command/prompt
 
@@ -170,7 +171,8 @@ ai-global uninstall
 ```
 
 This will:
-1. Restore all tools to original configuration
+
+1. Unlink all tools to original configuration
 2. Remove `~/.ai-global` directory
 3. Remove `ai-global` command
 
