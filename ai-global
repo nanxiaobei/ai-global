@@ -75,11 +75,28 @@ beautify_path() {
 get_tool_color() {
     local name="$1"
     local sum=0
-    # Simple hash to pick a stable color index
-    for (( i=0; i<${#name}; i++ )); do
-        sum=$((sum + $(printf '%d' "'${name:$i:1}")))
+    local len=${#name}
+    for (( i=0; i<len; i++ )); do
+        sum=$((sum + $(printf '%d' "'${name:i:1}")))
     done
     echo -e "${TOOL_COLORS[$((sum % ${#TOOL_COLORS[@]}))]}"
+}
+
+# Extract name from frontmatter (name: "...")
+extract_meta_name() {
+    local file="$1"
+    local default_name="$2"
+    if [[ ! -f "$file" ]]; then
+        echo "$default_name"
+        return
+    fi
+    # Match name: "value" or name: value
+    local extracted=$(grep -m 1 "^name:" "$file" | sed -E 's/^name:[[:space:]]*["'\'']?([^"'\'']+)["'\'']?/\1/' | xargs 2>/dev/null || true)
+    if [[ -n "$extracted" ]]; then
+        echo "$extracted"
+    else
+        echo "$default_name"
+    fi
 }
 
 log_info() { echo -e "${BLUE}[INFO]${NC} $1"; }
@@ -722,53 +739,74 @@ download_from_github() {
             [[ -n "$path" ]] && source_dir="$tmp_dir/$repo/$path"
 
             if [[ -d "$source_dir" ]]; then
-                # Auto-detect type subdirectory (e.g., skills/, agents/, rules/)
-                if [[ -z "$path" ]]; then
-                    local type_dirs=""
+                local count=0
+                local meta_file=""
+                case "$type" in
+                    skill) meta_file="SKILL.md" ;;
+                    agent) meta_file="AGENT.md" ;;
+                esac
+
+                # 1. Check if root contains metadata file
+                if [[ -n "$meta_file" ]] && [[ -f "$source_dir/$meta_file" ]]; then
+                    local name=$(extract_meta_name "$source_dir/$meta_file" "$(basename "$source_dir")")
+                    local target_path="$target_dir/$name"
+                    mkdir -p "$target_path"
+                    cp -R "$source_dir"/* "$target_path/"
+                    count=1
+                fi
+
+                # 2. Check type subdirectories (skills/, agents/)
+                if [[ $count -eq 0 ]] && [[ -z "$path" ]]; then
+                    local search_dirs=""
                     case "$type" in
-                        skill)   type_dirs="skills skill" ;;
-                        agent)   type_dirs="agents agent" ;;
-                        rule)    type_dirs="rules rule" ;;
-                        command) type_dirs="commands command" ;;
-                        prompt)  type_dirs="prompts prompt" ;;
+                        skill) search_dirs="skills skill" ;;
+                        agent) search_dirs="agents agent" ;;
+                        rule)  search_dirs="rules rule" ;;
                     esac
 
-                    # Prefer type subdirectory, fallback to root
-                    for dir in $type_dirs; do
+                    for dir in $search_dirs; do
                         if [[ -d "$source_dir/$dir" ]]; then
-                            source_dir="$source_dir/$dir"
-                            log_info "Found $dir/ directory"
-                            break
+                            # Look for subdirectories containing SKILL.md/AGENT.md
+                            if [[ -n "$meta_file" ]]; then
+                                for d in "$source_dir/$dir"/*; do
+                                    [[ ! -d "$d" ]] && continue
+                                    if [[ -f "$d/$meta_file" ]]; then
+                                        local name=$(extract_meta_name "$d/$meta_file" "$(basename "$d")")
+                                        mkdir -p "$target_dir/$name"
+                                        cp -R "$d"/* "$target_dir/$name/"
+                                        ((count++))
+                                    fi
+                                done
+                            fi
+                            
+                            # If we found items or if it's "rules" (no metadata file needed usually), we are done with this dir
+                            if [[ $count -gt 0 ]] || [[ "$type" == "rule" ]]; then
+                                source_dir="$source_dir/$dir"
+                                break
+                            fi
                         fi
                     done
                 fi
 
-                local count=0
-
-                # Special case: many skill repos are structured as:
-                # skills/<skill-name>/SKILL.md
-                if [[ "$type" == "skill" ]] && [[ "$(basename "$source_dir")" == "skills" ]]; then
-                    for d in "$source_dir"/*; do
-                        [[ ! -d "$d" ]] && continue
-                        local skill_md="$d/SKILL.md"
-                        [[ ! -f "$skill_md" ]] && continue
-
-                        local skill_name=$(basename "$d")
-
-                        # Copy the entire skill directory so assets/examples are preserved
-                        local target_skill_dir="$target_dir/$skill_name"
-                        mkdir -p "$target_skill_dir"
-                        cp -R "$d/" "$target_skill_dir/"
-
-                        ((count++))
-                    done
+                # 3. Check src/ directory if still nothing (for skills)
+                if [[ $count -eq 0 ]] && [[ "$type" == "skill" ]] && [[ -d "$source_dir/src" ]]; then
+                    if [[ -f "$source_dir/src/$meta_file" ]]; then
+                        local name=$(extract_meta_name "$source_dir/src/$meta_file" "$(basename "$source_dir")")
+                        mkdir -p "$target_dir/$name"
+                        cp -R "$source_dir/src"/* "$target_dir/$name/"
+                        count=1
+                    fi
                 fi
 
-                # Fallback: copy top-level .md files from the selected source directory
-                if [[ $count -eq 0 ]]; then
+                # Fallback check (rules only): copy individual .md files
+                if [[ $count -eq 0 ]] && [[ "$type" == "rule" ]]; then
                     for file in "$source_dir"/*.md; do
                         [[ ! -f "$file" ]] && continue
                         local filename=$(basename "$file")
+                        if [[ "$filename" == "README.md" ]]; then
+                            local other_mds=$(ls "$source_dir"/*.md 2>/dev/null | grep -v "README.md" | wc -l)
+                            [[ $other_mds -gt 0 ]] && continue
+                        fi
                         cp "$file" "$target_dir/$filename"
                         ((count++))
                     done
@@ -780,7 +818,7 @@ download_from_github() {
                     # Show actual searched path
                     local searched_path="${source_dir#$tmp_dir/$repo}"
                     searched_path="${searched_path#/}"
-                    log_warn "No skills found in $owner/$repo${searched_path:+/$searched_path}"
+                    log_warn "No $type found organized in $owner/$repo${searched_path:+/$searched_path}"
                 fi
             else
                 log_error "Path not found: $path"
