@@ -49,7 +49,7 @@ This will:
 | `ai-global backups`           | List available backups                 |
 | `ai-global unlink <key>`      | Restore a tool's original config       |
 | `ai-global unlink all`        | Restore all tools                      |
-| `ai-global skill <user/repo>` | Add a skill                            |
+| `ai-global skill <user/repo>` | Add skills                             |
 | `ai-global upgrade`           | Upgrade to latest version              |
 | `ai-global uninstall`         | Completely remove ai-global            |
 | `ai-global version`           | Show version                           |
@@ -71,7 +71,7 @@ ai-global skill https://github.com/user/repo
 ├── agents/          <- Shared agents
 ├── rules/           <- Shared rules
 ├── commands/        <- Shared slash commands
-└── backups/         <- Original configs (backup)
+└── backups/         <- Original configs (backups)
 
 Each AI tool's config directory contains symlinks:
 
@@ -81,8 +81,8 @@ Each AI tool's config directory contains symlinks:
 └── commands/ -> ~/.ai-global/commands/        (symlink)
 
 ~/.cursor/
-├── rules/AGENTS.md -> ~/.ai-global/AGENTS.md       (symlink)
-└── skills/         -> ~/.ai-global/skills/         (symlink)
+├── AGENTS.md -> ~/.ai-global/AGENTS.md        (symlink)
+└── skills/   -> ~/.ai-global/skills/          (symlink)
 
 ... and more tools
 ```
@@ -99,34 +99,34 @@ The first file found wins (dedup by filename).
 
 ## Supported Tools
 
-| Tool           | Key           | Global | Rules | Commands | Skills | Agents |
-| -------------- | ------------- | :----: | :---: | :------: | :----: | :----: |
-| Claude Code    | `claude`      |   ✓    |       |    ✓     |   ✓    |   ✓    |
-| OpenAI Codex   | `codex`       |   ✓    |   ✓   |          |   ✓    |   ✓    |
-| Cursor         | `cursor`      |   ✓    |   ✓   |    ✓     |   ✓    |   ✓    |
-| Factory Droid  | `droid`       |   ✓    |   ✓   |    ✓     |   ✓    |   ✓    |
-| Amp            | `amp`         |   ✓    |   ✓   |    ✓     |   ✓    |        |
-| Antigravity    | `antigravity` |   ✓    |       |          |   ✓    |        |
-| Gemini CLI     | `gemini`      |   ✓    |       |          |   ✓    |        |
-| Kiro CLI       | `kiro`        |   ✓    |   ✓   |          |   ✓    |   ✓    |
-| OpenCode       | `opencode`    |   ✓    |       |    ✓     |   ✓    |   ✓    |
-| Qoder          | `qoder`       |   ✓    |   ✓   |    ✓     |   ✓    |   ✓    |
-| Qodo           | `qodo`        |   ✓    |       |          |        |   ✓    |
-| GitHub Copilot | `copilot`     |   ✓    |       |          |   ✓    |   ✓    |
-| Continue       | `continue`    |   ✓    |   ✓   |          |        |        |
-| Windsurf       | `windsurf`    |   ✓    |   ✓   |          |   ✓    |        |
-| Roo Code       | `roo`         |   ✓    |   ✓   |    ✓     |   ✓    |        |
-| Cline          | `cline`       |   ✓    |   ✓   |          |   ✓    |        |
-| Blackbox AI    | `blackbox`    |        |       |          |   ✓    |        |
-| Goose AI       | `goose`       |   ✓    |       |          |   ✓    |        |
-| Augment        | `augment`     |   ✓    |   ✓   |    ✓     |        |   ✓    |
-| Clawdbot Code  | `clawdbot`    |   ✓    |       |          |   ✓    |   ✓    |
-| Command Code   | `commandcode` |   ✓    |       |    ✓     |   ✓    |        |
-| Kilo Code      | `kilocode`    |   ✓    |   ✓   |    ✓     |   ✓    |        |
-| Neovate        | `neovate`     |   ✓    |       |    ✓     |   ✓    |   ✓    |
-| OpenHands      | `openhands`   |   ✓    |       |          |   ✓    |        |
-| TRAE           | `trae`        |   ✓    |   ✓   |          |   ✓    |        |
-| Zencoder       | `zencoder`    |   ✓    |   ✓   |          |   ✓    |        |
+| Tool           | Key           | AGENTS.md | Rules | Commands | Skills | Agents |
+| -------------- | ------------- | :-------: | :---: | :------: | :----: | :----: |
+| Claude Code    | `claude`      |     ✓     |       |    ✓     |   ✓    |   ✓    |
+| OpenAI Codex   | `codex`       |     ✓     |   ✓   |          |   ✓    |   ✓    |
+| Cursor         | `cursor`      |     ✓     |   ✓   |    ✓     |   ✓    |   ✓    |
+| Factory Droid  | `droid`       |     ✓     |   ✓   |    ✓     |   ✓    |   ✓    |
+| Amp            | `amp`         |     ✓     |   ✓   |    ✓     |   ✓    |        |
+| Antigravity    | `antigravity` |     ✓     |       |          |   ✓    |        |
+| Gemini CLI     | `gemini`      |     ✓     |       |          |   ✓    |        |
+| Kiro CLI       | `kiro`        |     ✓     |   ✓   |          |   ✓    |   ✓    |
+| OpenCode       | `opencode`    |     ✓     |       |    ✓     |   ✓    |   ✓    |
+| Qoder          | `qoder`       |     ✓     |   ✓   |    ✓     |   ✓    |   ✓    |
+| Qodo           | `qodo`        |     ✓     |       |          |        |   ✓    |
+| GitHub Copilot | `copilot`     |     ✓     |       |          |   ✓    |   ✓    |
+| Continue       | `continue`    |     ✓     |   ✓   |          |        |        |
+| Windsurf       | `windsurf`    |     ✓     |   ✓   |          |   ✓    |        |
+| Roo Code       | `roo`         |     ✓     |   ✓   |    ✓     |   ✓    |        |
+| Cline          | `cline`       |     ✓     |   ✓   |          |   ✓    |        |
+| Blackbox AI    | `blackbox`    |           |       |          |   ✓    |        |
+| Goose AI       | `goose`       |     ✓     |       |          |   ✓    |        |
+| Augment        | `augment`     |     ✓     |   ✓   |    ✓     |        |   ✓    |
+| Clawdbot Code  | `clawdbot`    |     ✓     |       |          |   ✓    |   ✓    |
+| Command Code   | `commandcode` |     ✓     |       |    ✓     |   ✓    |        |
+| Kilo Code      | `kilocode`    |     ✓     |   ✓   |    ✓     |   ✓    |        |
+| Neovate        | `neovate`     |     ✓     |       |    ✓     |   ✓    |   ✓    |
+| OpenHands      | `openhands`   |     ✓     |       |          |   ✓    |        |
+| TRAE           | `trae`        |     ✓     |   ✓   |          |   ✓    |        |
+| Zencoder       | `zencoder`    |     ✓     |   ✓   |          |   ✓    |        |
 
 ## Uninstall
 

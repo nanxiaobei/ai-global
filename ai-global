@@ -996,7 +996,7 @@ show_help() {
     echo -e "  ${GREEN}unlink all${NC}          Restore all tools"
     echo ""
     echo -e "${BLUE}RESOURCE MANAGEMENT:${NC}"
-    echo -e "  ${GREEN}skill <user/repo>${NC}   Add a skill"
+    echo -e "  ${GREEN}skill <user/repo>${NC}   Add skills"
     echo ""
     echo -e "${BLUE}SYSTEM COMMANDS:${NC}"
     echo -e "  ${GREEN}upgrade${NC}             Upgrade ai-global to latest version"
