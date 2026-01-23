@@ -1,6 +1,6 @@
 {
   "name": "ai-global",
-  "version": "1.13.0",
+  "version": "1.14.0",
   "description": "Unified configuration manager for AI coding assistants",
   "bin": {
     "ai-global": "ai-global"

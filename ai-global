@@ -14,7 +14,7 @@ RULES_DIR="$CONFIG_DIR/rules"
 COMMANDS_DIR="$CONFIG_DIR/commands"
 
 # Version
-VERSION="1.13.0"
+VERSION="1.14.0"
 
 # Colors
 RED='\033[0;31m'
