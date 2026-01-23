@@ -471,6 +471,13 @@ update_tools() {
 
     mkdir -p "$SKILLS_DIR" "$AGENTS_DIR" "$RULES_DIR" "$COMMANDS_DIR" "$BACKUP_DIR"
 
+    # Check and rename global.md to AGENTS.md if it exists
+    if [[ -f "$CONFIG_DIR/global.md" ]]; then
+        log_info "Found legacy global.md file, renaming to AGENTS.md..."
+        mv "$CONFIG_DIR/global.md" "$CONFIG_DIR/AGENTS.md"
+        log_ok "Renamed global.md to AGENTS.md"
+    fi
+
     collect_agents_md
 
     local tool_count=0
@@ -961,6 +968,13 @@ upgrade() {
         mv "$exec_temp" "$current_script"
 
         log_ok "Upgraded to v$remote_version"
+        
+        # Check and rename global.md to AGENTS.md after upgrade
+        if [[ -f "$CONFIG_DIR/global.md" ]]; then
+            log_info "Found legacy global.md file, renaming to AGENTS.md..."
+            mv "$CONFIG_DIR/global.md" "$CONFIG_DIR/AGENTS.md"
+            log_ok "Renamed global.md to AGENTS.md"
+        fi
     else
         rm -f "$exec_temp"
         log_error "Failed to download update"
