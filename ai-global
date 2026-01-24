@@ -180,9 +180,9 @@ merge_items() {
         [[ -e "$target" ]] && continue
 
         if [[ -d "$item" ]]; then
-            cp -r "$item" "$target"
+            cp -r "$item" "$target" 2>/dev/null || true
         else
-            cp "$item" "$target"
+            cp "$item" "$target" 2>/dev/null || true
         fi
         ((merged_count++))
     done
