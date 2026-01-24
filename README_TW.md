@@ -1,15 +1,15 @@
 # AI Global
 
-[English](README.md) | [繁體中文](README_TW.md) | [日本語](README_JP.md) | [한국어](README_KR.md)
+[English](README.md) | [简体中文](README_CN.md) | [日本語](README_JP.md) | [한국어](README_KR.md)
 
-AI 编程助手统一配置管理器。编辑一个文件，同步到所有 AI 工具。
+AI 程式設計助手統一設定管理器。編輯一個檔案，同步到所有 AI 工具。
 
-## 安装
+## 安裝
 
 ### curl
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/nanxiaobei/ai-global/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/lazyjerry/ai-global/main/install.sh | bash
 ```
 
 ### npm
@@ -26,78 +26,78 @@ bun add -g ai-global
 
 ## 使用方法
 
-### 首次运行
+### 首次執行
 
 ```bash
 ai-global
 ```
 
-这将会：
+這將會：
 
-1. 扫描系统中已安装的 AI 工具
-2. 备份原始配置到 `~/.ai-global/backups/`
-3. 合并所有工具的 AGENTS.md/skills/agents/rules/commands
-4. 创建从各工具配置到共享目录的软链
+1. 掃描系統中已安裝的 AI 工具
+2. 備份原始設定到 `~/.ai-global/backups/`
+3. 合併所有工具的 AGENTS.md/skills/agents/rules/commands
+4. 建立從各工具設定到共享目錄的符號連結
 
-### 命令列表
+### 指令列表
 
-| 命令                          | 说明                         |
+| 指令                          | 說明                         |
 | ----------------------------- | ---------------------------- |
-| `ai-global`                   | 扫描、合并、更新软链（默认） |
-| `ai-global status`            | 显示软链状态                 |
-| `ai-global list`              | 列出支持的工具               |
-| `ai-global backups`           | 列出可用的备份               |
-| `ai-global unlink <key>`      | 恢复某个工具的原始配置       |
-| `ai-global unlink all`        | 恢复所有工具                 |
-| `ai-global skill <user/repo>` | 添加技能                     |
-| `ai-global upgrade`           | 升级到最新版本               |
-| `ai-global uninstall`         | 彻底卸载                     |
-| `ai-global version`           | 显示版本号                   |
-| `ai-global help`              | 显示帮助                     |
+| `ai-global`                   | 掃描、合併、更新符號連結（預設） |
+| `ai-global status`            | 顯示符號連結狀態             |
+| `ai-global list`              | 列出支援的工具               |
+| `ai-global backups`           | 列出可用的備份               |
+| `ai-global unlink <key>`      | 還原某個工具的原始設定       |
+| `ai-global unlink all`        | 還原所有工具                 |
+| `ai-global skill <user/repo>` | 新增技能                     |
+| `ai-global upgrade`           | 升級到最新版本               |
+| `ai-global uninstall`         | 完整解除安裝                 |
+| `ai-global version`           | 顯示版本號                   |
+| `ai-global help`              | 顯示說明                     |
 
-### 添加 skills
+### 新增 skills
 
 ```bash
 ai-global skill user/repo
 ai-global skill https://github.com/user/repo
 ```
 
-## 工作原理
+## 運作原理
 
 ```
 ~/.ai-global/
-├── AGENTS.md        <- 共享指令（编辑这个）
-├── skills/          <- 共享技能（从所有工具合并）
+├── AGENTS.md        <- 共享指令（編輯這個）
+├── skills/          <- 共享技能（從所有工具合併）
 ├── agents/          <- 共享代理
-├── rules/           <- 共享规则
-├── commands/        <- 共享斜杠命令
-└── backups/         <- 原始配置（备份）
+├── rules/           <- 共享規則
+├── commands/        <- 共享斜線指令
+└── backups/         <- 原始設定（備份）
 
-各 AI 工具的配置目录中存放软链：
+各 AI 工具的設定目錄中存放符號連結：
 
 ~/.claude/
-├── CLAUDE.md -> ~/.ai-global/AGENTS.md        (软链)
-├── skills/   -> ~/.ai-global/skills/          (软链)
-└── commands/ -> ~/.ai-global/commands/        (软链)
+├── CLAUDE.md -> ~/.ai-global/AGENTS.md        (符號連結)
+├── skills/   -> ~/.ai-global/skills/          (符號連結)
+└── commands/ -> ~/.ai-global/commands/        (符號連結)
 
 ~/.cursor/
-├── AGENTS.md -> ~/.ai-global/AGENTS.md        (软链)
-└── skills/   -> ~/.ai-global/skills/          (软链)
+├── AGENTS.md -> ~/.ai-global/AGENTS.md        (符號連結)
+└── skills/   -> ~/.ai-global/skills/          (符號連結)
 
 ... 以及更多工具
 ```
 
-## 合并行为
+## 合併行為
 
-运行 `ai-global` 时，会按文件名合并所有工具的内容：
+執行 `ai-global` 時，會按檔案名稱合併所有工具的內容：
 
 - Cursor 有 skills: `react/`, `typescript/`
 - Claude 有 skills: `typescript/`, `python/`
-- 合并结果 `~/.ai-global/skills/`: `react/`, `typescript/`, `python/`
+- 合併結果 `~/.ai-global/skills/`: `react/`, `typescript/`, `python/`
 
-先发现的文件优先（按文件名去重）。
+先發現的檔案優先（按檔案名稱去除重複）。
 
-## 支持的工具
+## 支援的工具
 
 | 工具           | Key           | AGENTS.md | Rules | Commands | Skills | Agents |
 | -------------- | ------------- | :-------: | :---: | :------: | :----: | :----: |
@@ -128,19 +128,19 @@ ai-global skill https://github.com/user/repo
 | TRAE           | `trae`        |     ✓     |   ✓   |          |   ✓    |        |
 | Zencoder       | `zencoder`    |     ✓     |   ✓   |          |   ✓    |        |
 
-## 卸载
+## 解除安裝
 
 ```bash
 ai-global uninstall
 ```
 
-这将会：
+這將會：
 
-1. 恢复所有工具的原始配置
-2. 删除 `~/.ai-global` 目录
-3. 移除 `ai-global` 命令
+1. 還原所有工具的原始設定
+2. 刪除 `~/.ai-global` 目錄
+3. 移除 `ai-global` 指令
 
-如果通过 npm 安装：
+如果透過 npm 安裝：
 
 ```bash
 ai-global uninstall
@@ -148,6 +148,6 @@ ai-global uninstall
 npm uninstall -g ai-global
 ```
 
-## 许可证
+## 授權條款
 
 MIT
