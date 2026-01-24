@@ -757,12 +757,12 @@ download_from_github() {
         log_info "Downloading: $raw_url"
 
         if curl -fsSL "$raw_url" -o "$target_dir/$filename" 2>/dev/null; then
-            log_ok "Added $type: $target_dir/$filename"
+            log_ok "Added skill: $target_dir/$filename"
         else
             # Try master branch
             raw_url="https://raw.githubusercontent.com/$owner/$repo/master/$path"
             if curl -fsSL "$raw_url" -o "$target_dir/$filename" 2>/dev/null; then
-                log_ok "Added $type: $target_dir/$filename"
+                log_ok "Added skill: $target_dir/$filename"
             else
                 log_error "Failed to download: $ref"
                 return 1
@@ -781,11 +781,7 @@ download_from_github() {
 
             if [[ -d "$source_dir" ]]; then
                 local count=0
-                local meta_file=""
-                case "$type" in
-                    skill) meta_file="SKILL.md" ;;
-                    agent) meta_file="AGENT.md" ;;
-                esac
+                local meta_file="SKILL.md"
 
                 # 1. Check if root contains metadata file
                 if [[ -n "$meta_file" ]] && [[ -f "$source_dir/$meta_file" ]]; then
@@ -796,18 +792,11 @@ download_from_github() {
                     count=1
                 fi
 
-                # 2. Check type subdirectories (skills/, agents/)
+                # 2. Check skills/ subdirectories
                 if [[ $count -eq 0 ]] && [[ -z "$path" ]]; then
-                    local search_dirs=""
-                    case "$type" in
-                        skill) search_dirs="skills skill" ;;
-                        agent) search_dirs="agents agent" ;;
-                        rule)  search_dirs="rules rule" ;;
-                    esac
-
-                    for dir in $search_dirs; do
+                    for dir in skills skill; do
                         if [[ -d "$source_dir/$dir" ]]; then
-                            # Look for subdirectories containing SKILL.md/AGENT.md
+                            # Look for subdirectories containing SKILL.md
                             if [[ -n "$meta_file" ]]; then
                                 for d in "$source_dir/$dir"/*; do
                                     [[ ! -d "$d" ]] && continue
@@ -820,8 +809,8 @@ download_from_github() {
                                 done
                             fi
 
-                            # If we found items or if it's "rules" (no metadata file needed usually), we are done with this dir
-                            if [[ $count -gt 0 ]] || [[ "$type" == "rule" ]]; then
+                            # If we found items, we are done with this dir
+                            if [[ $count -gt 0 ]]; then
                                 source_dir="$source_dir/$dir"
                                 break
                             fi
@@ -829,8 +818,8 @@ download_from_github() {
                     done
                 fi
 
-                # 3. Check src/ directory if still nothing (for skills)
-                if [[ $count -eq 0 ]] && [[ "$type" == "skill" ]] && [[ -d "$source_dir/src" ]]; then
+                # 3. Check src/ directory if still nothing
+                if [[ $count -eq 0 ]] && [[ -d "$source_dir/src" ]]; then
                     if [[ -f "$source_dir/src/$meta_file" ]]; then
                         local name=$(extract_meta_name "$source_dir/src/$meta_file" "$(basename "$source_dir")")
                         mkdir -p "$target_dir/$name"
@@ -839,27 +828,13 @@ download_from_github() {
                     fi
                 fi
 
-                # Fallback check (rules only): copy individual .md files
-                if [[ $count -eq 0 ]] && [[ "$type" == "rule" ]]; then
-                    for file in "$source_dir"/*.md; do
-                        [[ ! -f "$file" ]] && continue
-                        local filename=$(basename "$file")
-                        if [[ "$filename" == "README.md" ]]; then
-                            local other_mds=$(ls "$source_dir"/*.md 2>/dev/null | grep -v "README.md" | wc -l)
-                            [[ $other_mds -gt 0 ]] && continue
-                        fi
-                        cp "$file" "$target_dir/$filename"
-                        ((count++))
-                    done
-                fi
-
                 if [[ $count -gt 0 ]]; then
-                    log_ok "Added $count ${type}(s) from $owner/$repo"
+                    log_ok "Added $count skill(s) from $owner/$repo"
                 else
                     # Show actual searched path
                     local searched_path="${source_dir#$tmp_dir/$repo}"
                     searched_path="${searched_path#/}"
-                    log_warn "No $type found organized in $owner/$repo${searched_path:+/$searched_path}"
+                    log_warn "No skill found organized in $owner/$repo${searched_path:+/$searched_path}"
                 fi
             else
                 log_error "Path not found: $path"
@@ -881,11 +856,11 @@ add_skill() {
     local input="$1"
 
     if [[ -z "$input" ]]; then
-        log_error "Usage: ai-global skill <file|github-repo>"
+        log_error "Usage: ai-global add <file|github-repo>"
         echo ""
         echo "Examples:"
-        echo "  ai-global skill user/repo"
-        echo "  ai-global skill https://github.com/user/repo"
+        echo "  ai-global add user/repo"
+        echo "  ai-global add https://github.com/user/repo"
         return 1
     fi
 
@@ -899,8 +874,8 @@ add_skill() {
         log_error "Invalid input. Please provide a GitHub repository."
         echo ""
         echo "Examples:"
-        echo "  ai-global skill user/repo"
-        echo "  ai-global skill https://github.com/user/repo"
+        echo "  ai-global add user/repo"
+        echo "  ai-global add https://github.com/user/repo"
         return 1
     fi
 }
@@ -996,7 +971,7 @@ show_help() {
     echo -e "  ${GREEN}unlink all${NC}          Restore all tools"
     echo ""
     echo -e "${BLUE}RESOURCE MANAGEMENT:${NC}"
-    echo -e "  ${GREEN}skill <user/repo>${NC}   Add skills"
+    echo -e "  ${GREEN}add <user/repo>${NC}     Add skills"
     echo ""
     echo -e "${BLUE}SYSTEM COMMANDS:${NC}"
     echo -e "  ${GREEN}upgrade${NC}             Upgrade ai-global to latest version"
@@ -1019,11 +994,11 @@ main() {
         help|--help|-h) show_help; exit 0 ;;
         list) list_supported; exit 0 ;;
         version|-v|--version) show_version; exit 0 ;;
-        skill|unlink|status|backups|upgrade|uninstall)
+        add|unlink|status|backups|upgrade|uninstall)
             if [[ ! -d "$CONFIG_DIR" ]]; then
                 log_info "No configuration found. Running initial scan..."
                 update_tools
-                [[ "$cmd" == "skill" || "$cmd" == "status" ]] || exit 0
+                [[ "$cmd" == "add" || "$cmd" == "status" ]] || exit 0
             fi
             ;;
         version|-v|--version|help|--help|-h) ;;
@@ -1036,7 +1011,7 @@ main() {
         list)         list_supported ;;
         backups)      list_backups ;;
         unlink)       unlink_tool "$2" ;;
-        skill)        add_skill "$2" ;;
+        add)          add_skill "$2" ;;
         upgrade)      upgrade ;;
         uninstall)    uninstall ;;
         version|-v|--version) show_version ;;
