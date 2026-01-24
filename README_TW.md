@@ -9,7 +9,7 @@ AI 程式設計助手統一設定管理器。編輯一個檔案，同步到所�
 ### curl
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/lazyjerry/ai-global/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/nanxiaobei/ai-global/main/install.sh | bash
 ```
 
 ### npm
@@ -41,19 +41,19 @@ ai-global
 
 ### 指令列表
 
-| 指令                          | 說明                         |
-| ----------------------------- | ---------------------------- |
+| 指令                          | 說明                             |
+| ----------------------------- | -------------------------------- |
 | `ai-global`                   | 掃描、合併、更新符號連結（預設） |
-| `ai-global status`            | 顯示符號連結狀態             |
-| `ai-global list`              | 列出支援的工具               |
-| `ai-global backups`           | 列出可用的備份               |
-| `ai-global unlink <key>`      | 還原某個工具的原始設定       |
-| `ai-global unlink all`        | 還原所有工具                 |
-| `ai-global skill <user/repo>` | 新增技能                     |
-| `ai-global upgrade`           | 升級到最新版本               |
-| `ai-global uninstall`         | 完整解除安裝                 |
-| `ai-global version`           | 顯示版本號                   |
-| `ai-global help`              | 顯示說明                     |
+| `ai-global status`            | 顯示符號連結狀態                 |
+| `ai-global list`              | 列出支援的工具                   |
+| `ai-global backups`           | 列出可用的備份                   |
+| `ai-global unlink <key>`      | 還原某個工具的原始設定           |
+| `ai-global unlink all`        | 還原所有工具                     |
+| `ai-global skill <user/repo>` | 新增技能                         |
+| `ai-global upgrade`           | 升級到最新版本                   |
+| `ai-global uninstall`         | 完整解除安裝                     |
+| `ai-global version`           | 顯示版本號                       |
+| `ai-global help`              | 顯示說明                         |
 
 ### 新增 skills
 

@@ -9,7 +9,7 @@ AI 프로그래밍 어시스턴트 통합 설정 관리 도구입니다. 하나�
 ### curl
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/lazyjerry/ai-global/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/nanxiaobei/ai-global/main/install.sh | bash
 ```
 
 ### npm

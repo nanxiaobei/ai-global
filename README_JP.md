@@ -9,7 +9,7 @@ AI プログラミングアシスタント統合設定管理ツール。1つの�
 ### curl
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/lazyjerry/ai-global/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/nanxiaobei/ai-global/main/install.sh | bash
 ```
 
 ### npm
