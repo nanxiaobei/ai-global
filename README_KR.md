@@ -49,7 +49,7 @@ ai-global
 | `ai-global backups`           | 사용 가능한 백업 목록 표시             |
 | `ai-global unlink <key>`      | 특정 도구의 원본 설정 복원             |
 | `ai-global unlink all`        | 모든 도구 복원                         |
-| `ai-global skill <user/repo>` | 스킬 추가                              |
+| `ai-global add <user/repo>` | 스킬 추가                              |
 | `ai-global upgrade`           | 최신 버전으로 업그레이드               |
 | `ai-global uninstall`         | 완전히 제거                            |
 | `ai-global version`           | 버전 번호 표시                         |
@@ -58,8 +58,8 @@ ai-global
 ### 스킬 추가
 
 ```bash
-ai-global skill user/repo
-ai-global skill https://github.com/user/repo
+ai-global add user/repo
+ai-global add https://github.com/user/repo
 ```
 
 ## 작동 원리

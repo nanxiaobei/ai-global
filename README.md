@@ -49,7 +49,7 @@ This will:
 | `ai-global backups`           | List available backups                 |
 | `ai-global unlink <key>`      | Restore a tool's original config       |
 | `ai-global unlink all`        | Restore all tools                      |
-| `ai-global skill <user/repo>` | Add skills                             |
+| `ai-global add <user/repo>` | Add skills                             |
 | `ai-global upgrade`           | Upgrade to latest version              |
 | `ai-global uninstall`         | Completely remove ai-global            |
 | `ai-global version`           | Show version                           |
@@ -58,8 +58,8 @@ This will:
 ### Add skills
 
 ```bash
-ai-global skill user/repo
-ai-global skill https://github.com/user/repo
+ai-global add user/repo
+ai-global add https://github.com/user/repo
 ```
 
 ## How it works

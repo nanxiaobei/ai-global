@@ -49,7 +49,7 @@ ai-global
 | `ai-global backups`           | 列出可用的備份                   |
 | `ai-global unlink <key>`      | 還原某個工具的原始設定           |
 | `ai-global unlink all`        | 還原所有工具                     |
-| `ai-global skill <user/repo>` | 新增技能                         |
+| `ai-global add <user/repo>` | 新增技能                         |
 | `ai-global upgrade`           | 升級到最新版本                   |
 | `ai-global uninstall`         | 完整解除安裝                     |
 | `ai-global version`           | 顯示版本號                       |
@@ -58,8 +58,8 @@ ai-global
 ### 新增 skills
 
 ```bash
-ai-global skill user/repo
-ai-global skill https://github.com/user/repo
+ai-global add user/repo
+ai-global add https://github.com/user/repo
 ```
 
 ## 運作原理

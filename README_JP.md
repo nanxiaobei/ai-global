@@ -49,7 +49,7 @@ ai-global
 | `ai-global backups`           | 利用可能なバックアップを一覧表示     |
 | `ai-global unlink <key>`      | 特定のツールの元の設定を復元         |
 | `ai-global unlink all`        | すべてのツールを復元                 |
-| `ai-global skill <user/repo>` | スキルを追加                         |
+| `ai-global add <user/repo>` | スキルを追加                         |
 | `ai-global upgrade`           | 最新バージョンにアップグレード       |
 | `ai-global uninstall`         | 完全にアンインストール               |
 | `ai-global version`           | バージョン番号を表示                 |
@@ -58,8 +58,8 @@ ai-global
 ### スキルを追加
 
 ```bash
-ai-global skill user/repo
-ai-global skill https://github.com/user/repo
+ai-global add user/repo
+ai-global add https://github.com/user/repo
 ```
 
 ## 動作原理
