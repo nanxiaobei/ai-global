@@ -32,7 +32,7 @@ declare -a KNOWN_PATTERNS=(
   ".qodo|qodo|Qodo|AGENTS.md|.|.|.|agents|\\033[38;5;129m"
   ".qoder|qoder|Qoder|AGENTS.md|rules|commands|skills|agents|\\033[38;5;203m"
   ".roo|roo|Roo Code|AGENTS.md|rules|commands|skills|.|\\033[38;5;77m"
-  ".trae|trae|TRAE|AGENTS.md|rules|.|skills|.|\\033[38;5;215m"
+  ".trae|trae|TRAE|AGENTS.md,user_rules.md|.|.|skills|.|\\033[38;5;215m"
   ".windsurf, .codeium/windsurf|windsurf|Windsurf|AGENTS.md|rules|.|skills|.|\\033[38;5;159m"
   ".zencoder|zencoder|Zencoder|AGENTS.md|rules|.|skills|.|\\033[38;5;147m"
 )
@@ -132,7 +132,13 @@ update_links() {
         echo ""
         echo -e "${GREEN}[OK]${NC} ${color}Found: $name${NC}"
 
-        local types=("file:$agents_md:$agents_md_dir" "dir:$rules:$rules_dir" "dir:$commands:$commands_dir" "dir:$skills:$skills_dir" "dir:$subagents:$subagents_dir")
+        # Build types array, expanding comma-separated agents_md files
+        local types=()
+        IFS=',' read -ra agents_md_files <<< "$agents_md"
+        for md_file in "${agents_md_files[@]}"; do
+          types+=("file:$md_file:$agents_md_dir")
+        done
+        types+=("dir:$rules:$rules_dir" "dir:$commands:$commands_dir" "dir:$skills:$skills_dir" "dir:$subagents:$subagents_dir")
 
         for type_info in "${types[@]}"; do
           IFS=':' read -r type_key type_node target_dir <<< "$type_info"
@@ -149,7 +155,7 @@ update_links() {
                 cp -r "$type_dir" "$backup_file" 2> /dev/null
 
                 if [[ "$type_key" == "file" ]]; then
-                  # Copy
+                  # Copy file content to AGENTS.md (merge)
                   if [[ "$is_new_agents_md" == true ]]; then
                     mkdir -p "$(dirname "$target_dir")" 2> /dev/null
                     echo "<!-- $name -->" >> "$target_dir"
@@ -157,6 +163,18 @@ update_links() {
                     echo "" >> "$target_dir"
                     echo "" >> "$target_dir"
                   fi
+
+                  # Remove original file (no symlink for extra md files)
+                  rm -rf "$type_dir"
+
+                  # Print merge info
+                  local src_dir=$(beautify_dir "$type_dir")
+                  local tgt_dir=$(beautify_dir "$target_dir")
+                  local src_spaces=$((40 - ${#src_dir}))
+                  src_spaces=$((src_spaces > 0 ? src_spaces : 1))
+                  local src_spacing="                                        "
+                  src_spacing="${src_spacing:0:$src_spaces}"
+                  echo -e "${color}${src_dir}${src_spacing} ${GRAY}→ merged${NC}"
                 else
                   # Copy all files (overwrite if exists)
                   find "$type_dir" -type f -print0 2> /dev/null | while IFS= read -r -d '' file_dir; do
@@ -164,24 +182,49 @@ update_links() {
                     mkdir -p "$(dirname "$target_file")" 2> /dev/null
                     cp "$file_dir" "$target_file" 2> /dev/null || true
                   done
+
+                  # Remove
+                  rm -rf "$type_dir"
                 fi
 
-                # Remove
-                rm -rf "$type_dir"
+                # Create symlink for first agents_md file and directories only
+                if [[ "$type_key" != "file" ]] || [[ "$type_node" == "${agents_md_files[0]}" ]]; then
+                  ln -s "$target_dir" "$type_dir"
+
+                  # Print symlink
+                  local src_dir=$(beautify_dir "$type_dir")
+                  local tgt_dir=$(beautify_dir "$target_dir")
+                  local src_spaces=$((40 - ${#src_dir}))
+                  src_spaces=$((src_spaces > 0 ? src_spaces : 1))
+                  local src_spacing="                                        "
+                  src_spacing="${src_spacing:0:$src_spaces}"
+                  echo -e "${color}${src_dir}${src_spacing} ${GRAY}→ ${tgt_dir}${NC}"
+                fi
+              else
+                # Create symlink for first agents_md file and directories only
+                if [[ "$type_key" != "file" ]] || [[ "$type_node" == "${agents_md_files[0]}" ]]; then
+                  ln -s "$target_dir" "$type_dir"
+
+                  # Print symlink
+                  local src_dir=$(beautify_dir "$type_dir")
+                  local tgt_dir=$(beautify_dir "$target_dir")
+                  local src_spaces=$((40 - ${#src_dir}))
+                  src_spaces=$((src_spaces > 0 ? src_spaces : 1))
+                  local src_spacing="                                        "
+                  src_spacing="${src_spacing:0:$src_spaces}"
+                  echo -e "${color}${src_dir}${src_spacing} ${GRAY}→ ${tgt_dir}${NC}"
+                fi
               fi
-
-              # Create symlink whether exists or not
-              ln -s "$target_dir" "$type_dir"
+            else
+              # Print existing symlink
+              local src_dir=$(beautify_dir "$type_dir")
+              local tgt_dir=$(beautify_dir "$target_dir")
+              local src_spaces=$((40 - ${#src_dir}))
+              src_spaces=$((src_spaces > 0 ? src_spaces : 1))
+              local src_spacing="                                        "
+              src_spacing="${src_spacing:0:$src_spaces}"
+              echo -e "${color}${src_dir}${src_spacing} ${GRAY}→ ${tgt_dir}${NC}"
             fi
-
-            # Print symlink
-            local src_dir=$(beautify_dir "$type_dir")
-            local tgt_dir=$(beautify_dir "$target_dir")
-            local src_spaces=$((40 - ${#src_dir}))
-            src_spaces=$((src_spaces > 0 ? src_spaces : 1))
-            local src_spacing="                                        "
-            src_spacing="${src_spacing:0:$src_spaces}"
-            echo -e "${color}${src_dir}${src_spacing} ${GRAY}→ ${tgt_dir}${NC}"
           fi
         done
       fi
