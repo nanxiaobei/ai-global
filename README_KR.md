@@ -1,10 +1,14 @@
 # AI Global
 
-[English](README.md) | [简体中文](README_CN.md) | [繁體中文](README_TW.md) | [日本語](README_JP.md) | 한국어
+[English](README.md) · [简体中文](README_CN.md) · [繁體中文](README_TW.md) · [日本語](README_JP.md) · 한국어
 
-AI 프로그래밍 어시스턴트 통합 설정 관리 도구입니다. 하나의 파일을 편집하여 모든 AI 도구에 동기화하세요.
+---
 
-**시스템 모드**와 **프로젝트 모드**를 모두 지원합니다!
+**AI 프로그래밍 어시스턴트 통합 설정 관리 도구입니다.**
+
+하나의 파일을 편집하여 모든 AI 도구에 동기화하세요.
+
+**시스템 모드**와 **프로젝트 모드**를 모두 지원합니다
 
 ## 설치
 
@@ -73,6 +77,8 @@ ai-global
 ai-global add user/repo
 ai-global add https://github.com/user/repo
 ```
+
+스킬이 다운로드되어 `.ai-global/skills/` 디렉토리에 추가됩니다.
 
 ## 작동 원리
 

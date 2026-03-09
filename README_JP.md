@@ -1,10 +1,14 @@
 # AI Global
 
-[English](README.md) | [简体中文](README_CN.md) | [繁體中文](README_TW.md) | 日本語 | [한국어](README_KR.md)
+[English](README.md) · [简体中文](README_CN.md) · [繁體中文](README_TW.md) · 日本語 · [한국어](README_KR.md)
 
-AI プログラミングアシスタント統合設定管理ツール。1つのファイルを編集して、すべての AI ツールに同期します。
+---
 
-**システムモード**と**プロジェクトモード**の両方に対応！
+**AI プログラミングアシスタント統合設定管理ツール。**
+
+1つのファイルを編集して、すべての AI ツールに同期します。
+
+**システムモード**と**プロジェクトモード**の両方に対応
 
 ## インストール
 
@@ -73,6 +77,8 @@ ai-global
 ai-global add user/repo
 ai-global add https://github.com/user/repo
 ```
+
+スキルはダウンロードされ、あなたの `.ai-global/skills/` ディレクトリに追加されます。
 
 ## 動作原理
 

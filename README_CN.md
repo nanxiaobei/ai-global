@@ -1,10 +1,14 @@
 # AI Global
 
-[English](README.md) | 简体中文 | [繁體中文](README_TW.md) | [日本語](README_JP.md) | [한국어](README_KR.md)
+[English](README.md) · 简体中文 · [繁體中文](README_TW.md) · [日本語](README_JP.md) · [한국어](README_KR.md)
 
-AI 编程助手统一配置管理器。编辑一个文件，同步到所有 AI 工具。
+---
 
-同时支持**系统模式**和**项目模式**！
+**AI 编程工具统一配置管理器。**
+
+编辑一个文件，同步到所有 AI 工具。
+
+同时支持**系统模式**和**项目模式**
 
 ## 安装
 
@@ -73,6 +77,8 @@ ai-global
 ai-global add user/repo
 ai-global add https://github.com/user/repo
 ```
+
+技能将被下载并添加到你的 `.ai-global/skills/` 目录。
 
 ## 工作原理
 
