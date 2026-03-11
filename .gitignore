@@ -2,3 +2,6 @@ node_modules
 
 .ai-global
 .DS_Store
+.github
+.claude
+.cursor

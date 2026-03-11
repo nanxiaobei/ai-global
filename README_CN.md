@@ -53,6 +53,8 @@ ai-global
 4. 合并检测到的工具的 AGENTS.md/skills/agents/rules/commands
 5. 创建从各工具配置到共享目录的软链
 
+注意：AI Global 只会处理已经存在的工具目录，不会帮你创建 `.github`、`.kiro`、`.cursor` 这类目录。
+
 ### 命令列表
 
 | 命令                        | 说明                         | 上下文感知 |
@@ -168,6 +170,7 @@ my-project/
 | OpenHands      | `openhands`   |     ✓     |       |          |   ✓    |        |
 | TRAE           | `trae`        |     ✓     |   ✓   |          |   ✓    |        |
 | Zencoder       | `zencoder`    |     ✓     |   ✓   |          |   ✓    |        |
+| GitHub         | `github`      |           |       |          |   ✓    |   ✓    |
 
 ## 卸载
 

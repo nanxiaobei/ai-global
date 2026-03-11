@@ -53,6 +53,8 @@ ai-global
 4. 合併偵測到的工具的 AGENTS.md/skills/agents/rules/commands
 5. 建立從各工具設定到共享目錄的符號連結
 
+注意：AI Global 只會處理已存在的工具目錄，不會替你建立像 `.github`、`.kiro`、`.cursor` 這類目錄。
+
 ### 指令列表
 
 | 指令                        | 說明                             | 上下文感知 |
@@ -168,6 +170,7 @@ my-project/
 | OpenHands      | `openhands`   |     ✓     |       |          |   ✓    |        |
 | TRAE           | `trae`        |     ✓     |   ✓   |          |   ✓    |        |
 | Zencoder       | `zencoder`    |     ✓     |   ✓   |          |   ✓    |        |
+| GitHub         | `github`      |           |       |          |   ✓    |   ✓    |
 
 ## 解除安裝
 

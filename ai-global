@@ -4,7 +4,7 @@
 # https://github.com/nanxiaobei/ai-global
 
 # Version
-VERSION="2.6.0"
+VERSION="2.6.2"
 
 # Known AI tool patterns
 # Format: nodes|key|name|agents_md|rules|commands|skills|subagents|color
@@ -35,6 +35,7 @@ declare -a KNOWN_PATTERNS=(
   ".trae|trae|TRAE|AGENTS.md|rules|.|skills|.|\\033[38;5;215m"
   ".windsurf, .codeium/windsurf|windsurf|Windsurf|AGENTS.md|rules|.|skills|.|\\033[38;5;159m"
   ".zencoder|zencoder|Zencoder|AGENTS.md|rules|.|skills|.|\\033[38;5;147m"
+  ".github|github|GitHub|copilot-instructions.md|.|.|skills|agents|\\033[38;5;240m"
 )
 
 # Colors
@@ -158,6 +159,13 @@ update_links() {
                     echo "" >> "$target_dir"
                   fi
                 else
+                  # Warn if shared target already has files from other tools
+                  local existing_count=$(find "$target_dir" -type f 2>/dev/null | wc -l | tr -d ' ')
+                  if [[ "$existing_count" -gt 0 ]]; then
+                    log_warn "Shared directory $(beautify_dir "$target_dir") already has $existing_count file(s)"
+                    log_warn "Files from ${color}$name${NC}${YELLOW} will be merged into the shared directory${NC}"
+                  fi
+
                   # Copy all files (overwrite if exists)
                   find "$type_dir" -type f -print0 2> /dev/null | while IFS= read -r -d '' file_dir; do
                     local target_file="$target_dir/${file_dir#$type_dir/}"

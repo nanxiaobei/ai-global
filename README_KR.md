@@ -53,6 +53,8 @@ ai-global
 4. 감지된 도구의 AGENTS.md/skills/agents/rules/commands를 병합합니다
 5. 각 도구의 설정에서 공유 디렉토리로 심볼릭 링크를 생성합니다
 
+참고: AI Global은 이미 존재하는 도구 디렉토리만 처리하며, `.github`, `.kiro`, `.cursor` 같은 디렉토리를 자동으로 만들지는 않습니다.
+
 ### 명령어 목록
 
 | 명령어                      | 설명                                    | 컨텍스트 인식 |
@@ -168,6 +170,7 @@ my-project/
 | OpenHands      | `openhands`   |     ✓     |       |          |   ✓    |        |
 | TRAE           | `trae`        |     ✓     |   ✓   |          |   ✓    |        |
 | Zencoder       | `zencoder`    |     ✓     |   ✓   |          |   ✓    |        |
+| GitHub         | `github`      |           |       |          |   ✓    |   ✓    |
 
 ## 제거
 
