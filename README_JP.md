@@ -53,6 +53,8 @@ ai-global
 4. 検出されたツールの AGENTS.md/skills/agents/rules/commands をマージ
 5. 各ツールの設定から共有ディレクトリへのシンボリックリンクを作成
 
+注意: AI Global が処理するのは、すでに存在するツールディレクトリだけです。`.github`、`.kiro`、`.cursor` のようなディレクトリは自動作成されません。
+
 ### コマンド一覧
 
 | コマンド                    | 説明                                                   | コンテキスト対応 |
@@ -168,6 +170,7 @@ my-project/
 | OpenHands      | `openhands`   |     ✓     |       |          |   ✓    |        |
 | TRAE           | `trae`        |     ✓     |   ✓   |          |   ✓    |        |
 | Zencoder       | `zencoder`    |     ✓     |   ✓   |          |   ✓    |        |
+| GitHub         | `github`      |           |       |          |   ✓    |   ✓    |
 
 ## アンインストール
 

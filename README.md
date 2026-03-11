@@ -53,6 +53,8 @@ This will:
 4. Merge AGENTS.md/skills/agents/rules/commands from detected tools
 5. Create symlinks from each tool's config to shared directories
 
+Note: AI Global only handles tool directories that already exist. It does not create directories like `.github`, `.kiro`, or `.cursor` for you.
+
 ## Commands
 
 | Command                     | Description                            | Context-aware |
@@ -168,6 +170,7 @@ When you run `ai-global`, it merges items from all tools by filename:
 | OpenHands      | `openhands`   |     ✓     |       |          |   ✓    |        |
 | TRAE           | `trae`        |     ✓     |   ✓   |          |   ✓    |        |
 | Zencoder       | `zencoder`    |     ✓     |   ✓   |          |   ✓    |        |
+| GitHub         | `github`      |           |       |          |   ✓    |   ✓    |
 
 ## Uninstall
 
