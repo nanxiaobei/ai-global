@@ -193,6 +193,7 @@ update_links() {
   # Check if any tools were found
   if [[ $total_tools -eq 0 ]]; then
     log_info "No AI tool configs found"
+    log_info "Create an AI tool config directory in this project (e.g., .cursor/ or .claude/), then run again"
     # Remove empty .ai-global directory
     rm -rf "$base_dir/.ai-global" 2> /dev/null
     echo ""
