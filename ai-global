@@ -7,34 +7,34 @@
 VERSION="2.6.0"
 
 # Known AI tool patterns
-# Format: nodes|key|name|agents_md|rules|commands|skills|subagents|color
+# Format: nodes|key|name|agents_md|rules|commands|skills|color
 declare -a KNOWN_PATTERNS=(
-  ".amp|amp|Amp|AGENTS.md|rules|commands|skills|.|\\033[38;5;226m"
-  ".augment|augment|Augment|AGENTS.md|rules|commands|.|agents|\\033[38;5;46m"
-  ".blackbox|blackbox|Blackbox AI|.|.|.|skills|.|\\033[38;5;51m"
-  ".claude|claude|Claude Code|CLAUDE.md|.|commands|skills|agents|\\033[38;5;180m"
-  ".cline|cline|Cline|AGENTS.md|rules|.|skills|.|\\033[38;5;201m"
-  ".clawdbot|clawdbot|Clawdbot Code|AGENTS.md|.|.|skills|subagents|\\033[38;5;208m"
-  ".codex|codex|OpenAI Codex|AGENTS.md|rules|.|skills|agents|\\033[38;5;9m"
-  ".commandcode|commandcode|Command Code|AGENTS.md|.|.|skills|.|\\033[38;5;11m"
-  ".continue|continue|Continue|AGENTS.md|rules|.|.|.|\\033[38;5;10m"
-  ".copilot|copilot|GitHub Copilot|AGENTS.md|.|.|skills|agents|\\033[38;5;14m"
-  ".cursor|cursor|Cursor|AGENTS.md|rules|commands|skills|agents|\\033[38;5;12m"
-  ".factory|droid|Factory Droid|AGENTS.md|rules|commands|skills|droids|\\033[38;5;13m"
-  ".gemini|antigravity|Antigravity|GEMINI.md|.|.|antigravity/skills|.|\\033[38;5;214m"
-  ".gemini|gemini|Gemini CLI|GEMINI.md|.|.|skills|.|\\033[38;5;220m"
-  ".goose|goose|Goose AI|AGENTS.md|.|.|skills|.|\\033[38;5;82m"
-  ".kiro|kiro|Kiro CLI|AGENTS.md|steering|.|skills|agents|\\033[38;5;117m"
-  ".kilocode|kilocode|Kilo Code|AGENTS.md|rules|commands|skills|.|\\033[38;5;165m"
-  ".neovate|neovate|Neovate|AGENTS.md|.|commands|skills|agents|\\033[38;5;118m"
-  ".opencode, .config/opencode|opencode|OpenCode|AGENTS.md|.|commands|skills|agents|\\033[38;5;225m"
-  ".openhands|openhands|OpenHands|AGENTS.md|.|.|skills|.|\\033[38;5;39m"
-  ".qodo|qodo|Qodo|AGENTS.md|.|.|.|agents|\\033[38;5;129m"
-  ".qoder|qoder|Qoder|AGENTS.md|rules|commands|skills|agents|\\033[38;5;203m"
-  ".roo|roo|Roo Code|AGENTS.md|rules|commands|skills|.|\\033[38;5;77m"
-  ".trae|trae|TRAE|AGENTS.md|rules|.|skills|.|\\033[38;5;215m"
-  ".windsurf, .codeium/windsurf|windsurf|Windsurf|AGENTS.md|rules|.|skills|.|\\033[38;5;159m"
-  ".zencoder|zencoder|Zencoder|AGENTS.md|rules|.|skills|.|\\033[38;5;147m"
+  ".amp|amp|Amp|AGENTS.md|rules|commands|skills|\\033[38;5;226m"
+  ".augment|augment|Augment|AGENTS.md|rules|commands|.|\\033[38;5;46m"
+  ".blackbox|blackbox|Blackbox AI|.|.|.|skills|\\033[38;5;51m"
+  ".claude|claude|Claude Code|CLAUDE.md|.|commands|skills|\\033[38;5;180m"
+  ".cline|cline|Cline|AGENTS.md|rules|.|skills|\\033[38;5;201m"
+  ".clawdbot|clawdbot|Clawdbot Code|AGENTS.md|.|.|skills|\\033[38;5;208m"
+  ".codex|codex|OpenAI Codex|AGENTS.md|rules|.|skills|\\033[38;5;9m"
+  ".commandcode|commandcode|Command Code|AGENTS.md|.|.|skills|\\033[38;5;11m"
+  ".continue|continue|Continue|AGENTS.md|rules|.|.|\\033[38;5;10m"
+  ".copilot|copilot|GitHub Copilot|AGENTS.md|.|.|skills|\\033[38;5;14m"
+  ".cursor|cursor|Cursor|AGENTS.md|rules|commands|skills|\\033[38;5;12m"
+  ".factory|droid|Factory Droid|AGENTS.md|rules|commands|skills|\\033[38;5;13m"
+  ".gemini|antigravity|Antigravity|GEMINI.md|.|.|antigravity/skills|\\033[38;5;214m"
+  ".gemini|gemini|Gemini CLI|GEMINI.md|.|.|skills|\\033[38;5;220m"
+  ".goose|goose|Goose AI|AGENTS.md|.|.|skills|\\033[38;5;82m"
+  ".kiro|kiro|Kiro CLI|AGENTS.md|steering|.|skills|\\033[38;5;117m"
+  ".kilocode|kilocode|Kilo Code|AGENTS.md|rules|commands|skills|\\033[38;5;165m"
+  ".neovate|neovate|Neovate|AGENTS.md|.|commands|skills|\\033[38;5;118m"
+  ".opencode, .config/opencode|opencode|OpenCode|AGENTS.md|.|commands|skills|\\033[38;5;225m"
+  ".openhands|openhands|OpenHands|AGENTS.md|.|.|skills|\\033[38;5;39m"
+  ".qodo|qodo|Qodo|AGENTS.md|.|.|.|\\033[38;5;129m"
+  ".qoder|qoder|Qoder|AGENTS.md|rules|commands|skills|\\033[38;5;203m"
+  ".roo|roo|Roo Code|AGENTS.md|rules|commands|skills|\\033[38;5;77m"
+  ".trae|trae|TRAE|AGENTS.md|rules|.|skills|\\033[38;5;215m"
+  ".windsurf, .codeium/windsurf|windsurf|Windsurf|AGENTS.md|rules|.|skills|\\033[38;5;159m"
+  ".zencoder|zencoder|Zencoder|AGENTS.md|rules|.|skills|\\033[38;5;147m"
 )
 
 # Colors
@@ -88,7 +88,6 @@ update_links() {
   local rules_dir="$base_dir/.ai-global/rules"
   local commands_dir="$base_dir/.ai-global/commands"
   local skills_dir="$base_dir/.ai-global/skills"
-  local subagents_dir="$base_dir/.ai-global/agents"
   local backups_dir="$base_dir/.ai-global/backups"
 
   local total_tools=0
@@ -117,10 +116,10 @@ update_links() {
   fi
 
   # Create directories
-  mkdir -p "$rules_dir" "$commands_dir" "$skills_dir" "$subagents_dir" "$backups_dir"
+  mkdir -p "$rules_dir" "$commands_dir" "$skills_dir" "$backups_dir"
 
   for pattern in "${KNOWN_PATTERNS[@]}"; do
-    IFS='|' read -r nodes key name agents_md rules commands skills subagents color <<< "$pattern"
+    IFS='|' read -r nodes key name agents_md rules commands skills color <<< "$pattern"
     IFS=', ' read -ra node_array <<< "$nodes"
 
     for tool_node in "${node_array[@]}"; do
@@ -132,7 +131,7 @@ update_links() {
         echo ""
         echo -e "${GREEN}[OK]${NC} ${color}Found: $name${NC}"
 
-        local types=("file:$agents_md:$agents_md_dir" "dir:$rules:$rules_dir" "dir:$commands:$commands_dir" "dir:$skills:$skills_dir" "dir:$subagents:$subagents_dir")
+        local types=("file:$agents_md:$agents_md_dir" "dir:$rules:$rules_dir" "dir:$commands:$commands_dir" "dir:$skills:$skills_dir")
 
         for type_info in "${types[@]}"; do
           IFS=':' read -r type_key type_node target_dir <<< "$type_info"
@@ -158,9 +157,14 @@ update_links() {
                     echo "" >> "$target_dir"
                   fi
                 else
-                  # Copy all files (overwrite if exists)
-                  find "$type_dir" -type f -print0 2> /dev/null | while IFS= read -r -d '' file_dir; do
-                    local target_file="$target_dir/${file_dir#$type_dir/}"
+                  # Copy all files (overwrite if exists), excluding hidden files and files in hidden dirs
+                  find "$type_dir" -type f -not -name '.*' -print0 2> /dev/null | while IFS= read -r -d '' file_dir; do
+                    local rel_path="${file_dir#$type_dir/}"
+                    # Skip if path contains any hidden directory component (at start or after /)
+                    if [[ "$rel_path" =~ (^|/)\.[^/]+(/|$) ]]; then
+                      continue
+                    fi
+                    local target_file="$target_dir/$rel_path"
                     mkdir -p "$(dirname "$target_file")" 2> /dev/null
                     cp "$file_dir" "$target_file" 2> /dev/null || true
                   done
@@ -247,17 +251,16 @@ show_status() {
   local rules_output=""
   local commands_output=""
   local skills_output=""
-  local subagents_output=""
 
   for pattern in "${KNOWN_PATTERNS[@]}"; do
-    IFS='|' read -r nodes key name agents_md rules commands skills subagents color <<< "$pattern"
+    IFS='|' read -r nodes key name agents_md rules commands skills color <<< "$pattern"
     IFS=', ' read -ra node_array <<< "$nodes"
 
     for tool_node in "${node_array[@]}"; do
       local tool_dir="$base_dir/$tool_node"
 
       if [[ -d "$tool_dir" ]]; then
-        local types=("$agents_md:agents_md_output" "$rules:rules_output" "$commands:commands_output" "$skills:skills_output" "$subagents:subagents_output")
+        local types=("$agents_md:agents_md_output" "$rules:rules_output" "$commands:commands_output" "$skills:skills_output")
 
         for type_info in "${types[@]}"; do
           IFS=':' read -r type_node output_var <<< "$type_info"
@@ -273,7 +276,7 @@ show_status() {
     return
   fi
 
-  local types=("AGENTS.md:$agents_md_output" "rules:$rules_output" "commands:$commands_output" "skills:$skills_output" "agents:$subagents_output")
+  local types=("AGENTS.md:$agents_md_output" "rules:$rules_output" "commands:$commands_output" "skills:$skills_output")
 
   for type_info in "${types[@]}"; do
     IFS=':' read -r title content <<< "$type_info"
@@ -289,11 +292,11 @@ list_tools() {
   local base_dir=$(pwd)
   log_context_info "$base_dir"
 
-  echo -e "  ${BLUE}Tool             Key          Directory                    AGENTS.md Rules Commands Skills Agents Status${NC}"
-  echo -e "  ${BLUE}-----------------------------------------------------------------------------------------------------------${NC}"
+  echo -e "  ${BLUE}Tool             Key          Directory                    AGENTS.md Rules Commands Skills Status${NC}"
+  echo -e "  ${BLUE}-------------------------------------------------------------------------------------------------------${NC}"
 
   for pattern in "${KNOWN_PATTERNS[@]}"; do
-    IFS='|' read -r nodes key name agents_md rules commands skills subagents color <<< "$pattern"
+    IFS='|' read -r nodes key name agents_md rules commands skills color <<< "$pattern"
     IFS=', ' read -ra node_array <<< "$nodes"
 
     local row_color="${GRAY}"
@@ -324,7 +327,7 @@ list_tools() {
     local nodes_pad="                               "
     nodes_pad="${nodes_pad:0:$nodes_spaces}"
 
-    echo -e "  ${row_color}${name}${name_pad}${key}${key_spacing}${nodes}${nodes_pad} $([[ "$agents_md" == "." ]] && echo "." || echo "○")        $([[ "$rules" == "." ]] && echo "." || echo "○")      $([[ "$commands" == "." ]] && echo "." || echo "○")       $([[ "$skills" == "." ]] && echo "." || echo "○")      $([[ "$subagents" == "." ]] && echo "." || echo "○")    ${status}${NC}"
+    echo -e "  ${row_color}${name}${name_pad}${key}${key_spacing}${nodes}${nodes_pad} $([[ "$agents_md" == "." ]] && echo "." || echo "○")        $([[ "$rules" == "." ]] && echo "." || echo "○")      $([[ "$commands" == "." ]] && echo "." || echo "○")       $([[ "$skills" == "." ]] && echo "." || echo "○")    ${status}${NC}"
   done
   echo ""
 }
@@ -362,12 +365,11 @@ unlink_one_tool() {
   local rules="$4"
   local commands="$5"
   local skills="$6"
-  local subagents="$7"
-  local color="$8"
+  local color="$7"
 
   local unlinked_count=0
 
-  for type_node in "$agents_md" "$rules" "$commands" "$skills" "$subagents"; do
+  for type_node in "$agents_md" "$rules" "$commands" "$skills"; do
     if [[ "$type_node" != "." ]]; then
       local type_dir="$base_dir/$tool_node/$type_node"
       if [[ -L "$type_dir" ]]; then
@@ -401,14 +403,14 @@ unlink_all_tools() {
   local total_unlinked=0
 
   for pattern in "${KNOWN_PATTERNS[@]}"; do
-    IFS='|' read -r nodes key name agents_md rules commands skills subagents color <<< "$pattern"
+    IFS='|' read -r nodes key name agents_md rules commands skills color <<< "$pattern"
     IFS=', ' read -ra node_array <<< "$nodes"
 
     for tool_node in "${node_array[@]}"; do
       local tool_dir="$base_dir/$tool_node"
 
       if [[ -d "$tool_dir" ]]; then
-        unlink_one_tool "$base_dir" "$tool_node" "$agents_md" "$rules" "$commands" "$skills" "$subagents" "$color"
+        unlink_one_tool "$base_dir" "$tool_node" "$agents_md" "$rules" "$commands" "$skills" "$color"
         total_unlinked=$((total_unlinked + $?))
       fi
     done
@@ -442,7 +444,7 @@ unlink_tool() {
   # Find pattern by searching KNOWN_PATTERNS
   local match=""
   for pattern in "${KNOWN_PATTERNS[@]}"; do
-    IFS='|' read -r nodes key name agents_md rules commands skills subagents color <<< "$pattern"
+    IFS='|' read -r nodes key name agents_md rules commands skills color <<< "$pattern"
     if [[ "$key" == "$query_key" ]]; then
       match="$pattern"
       break
@@ -462,7 +464,7 @@ unlink_tool() {
   local has_found=false
 
   # Parse pattern and unlink tool
-  IFS='|' read -r nodes key name agents_md rules commands skills subagents color <<< "$match"
+  IFS='|' read -r nodes key name agents_md rules commands skills color <<< "$match"
   IFS=', ' read -ra node_array <<< "$nodes"
 
   for tool_node in "${node_array[@]}"; do
@@ -470,7 +472,7 @@ unlink_tool() {
 
     if [[ -d "$tool_dir" ]]; then
       has_found=true
-      unlink_one_tool "$base_dir" "$tool_node" "$agents_md" "$rules" "$commands" "$skills" "$subagents" "$color"
+      unlink_one_tool "$base_dir" "$tool_node" "$agents_md" "$rules" "$commands" "$skills" "$color"
       local unlinked_count=$?
       if [[ $unlinked_count -gt 0 ]]; then
         log_ok "Unlinked $unlinked_count symlinks from ${color}$(beautify_dir "$tool_dir")${NC}"
@@ -549,49 +551,55 @@ download_from_github() {
 
     if [[ -d "$source_node" ]]; then
       local meta_file="SKILL.md"
+      local processed_dirs=()
+      local has_root_skill=false
 
-      # 1. Check if root contains metadata file
+      # First check if root has SKILL.md
       if [[ -f "$source_node/$meta_file" ]]; then
+        has_root_skill=true
         local name=$(extract_meta_name "$source_node/$meta_file" "$(basename "$source_node")")
-        local file_dir="$skills_dir/$name"
-        mkdir -p "$file_dir"
-        cp -R "$source_node"/* "$file_dir/"
+        mkdir -p "$skills_dir/$name"
+        # Copy files excluding: hidden (.), README.md*, LICENSE*
+        for item in "$source_node"/*; do
+          [[ ! -e "$item" ]] && continue
+          local item_name=$(basename "$item")
+          # Skip hidden files, README.md, LICENSE
+          [[ "$item_name" == .* ]] && continue
+          [[ "$item_name" == README.md* ]] && continue
+          [[ "$item_name" == LICENSE* ]] && continue
+          cp -R "$item" "$skills_dir/$name/" 2> /dev/null || true
+        done
+        echo "  - $name"
         skills_count=1
       fi
 
-      # 2. Check skills/ subdirectories
-      if [[ $skills_count -eq 0 ]] && [[ -z "$path" ]]; then
-        for dir in skills skill; do
-          if [[ -d "$source_node/$dir" ]]; then
-            # Search subdirectories containing SKILL.md
-            for d in "$source_node/$dir"/*; do
-              [[ ! -d "$d" ]] && continue
-              if [[ -f "$d/$meta_file" ]]; then
-                local name=$(extract_meta_name "$d/$meta_file" "$(basename "$d")")
-                mkdir -p "$skills_dir/$name"
-                cp -R "$d"/* "$skills_dir/$name/"
-                echo "  - $name"
-                ((skills_count++))
-              fi
-            done
-          fi
+      # Only check subdirectories if root doesn't have SKILL.md
+      if [[ "$has_root_skill" == false ]]; then
+        while IFS= read -r -d '' skill_file; do
+          local skill_parent=$(dirname "$skill_file")
+          local dir_name=$(basename "$skill_parent")
 
-          # If we found items, we are done with this dir
-          if [[ $skills_count -gt 0 ]]; then
-            source_node="$source_node/$dir"
-            break
-          fi
-        done
-      fi
+          # Skip hidden directories
+          [[ "$dir_name" == .* ]] && continue
 
-      # 3. Check src/ directory if still nothing
-      if [[ $skills_count -eq 0 ]] && [[ -d "$source_node/src" ]]; then
-        if [[ -f "$source_node/src/$meta_file" ]]; then
-          local name=$(extract_meta_name "$source_node/src/$meta_file" "$(basename "$source_node")")
+          # Skip if already processed
+          local already_processed=false
+          for processed in "${processed_dirs[@]}"; do
+            [[ "$processed" == "$skill_parent" ]] && already_processed=true && break
+          done
+          [[ "$already_processed" == true ]] && continue
+
+          processed_dirs+=("$skill_parent")
+
+          local name=$(extract_meta_name "$skill_file" "$dir_name")
           mkdir -p "$skills_dir/$name"
-          cp -R "$source_node/src"/* "$skills_dir/$name/"
-          skills_count=1
-        fi
+          # Copy files excluding hidden files
+          for skill_item in "$skill_parent"/[^.]*; do
+            [[ -e "$skill_item" ]] && cp -R "$skill_item" "$skills_dir/$name/" 2> /dev/null || true
+          done
+          echo "  - $name"
+          ((skills_count++))
+        done < <(find "$source_node" -mindepth 2 -name "$meta_file" -type f -print0 2> /dev/null | grep -zZv '/\.' || true)
       fi
 
       if [[ $skills_count -gt 0 ]]; then
@@ -698,7 +706,7 @@ upgrade() {
 }
 
 # Backup all ai-global configs to .agents directory
-backup_to_agents_dir() {
+backup_to_dot_agents_dir() {
   local base_dir="$1"
   local config_dir="$base_dir/.ai-global"
 
@@ -711,7 +719,7 @@ backup_to_agents_dir() {
   mkdir -p "$config_backup_dir"
 
   # Backup all
-  local types=("AGENTS.md" "skills" "rules" "agents" "commands")
+  local types=("AGENTS.md" "skills" "rules" "commands")
 
   for type_node in "${types[@]}"; do
     if [[ -e "$config_dir/$type_node" ]]; then
@@ -729,7 +737,7 @@ backup_to_agents_dir() {
 uninstall() {
   # Backup all configs to .agents directory
   echo ""
-  backup_to_agents_dir "$HOME"
+  backup_to_dot_agents_dir "$HOME"
   unlink_all_tools "$HOME"
   echo ""
 
@@ -750,7 +758,7 @@ uninstall() {
       if [[ -d "$project_dir" ]]; then
         if [[ -d "$project_dir/.ai-global" ]]; then
           log_info "Found project: $(beautify_dir "$project_dir")"
-          backup_to_agents_dir "$project_dir"
+          backup_to_dot_agents_dir "$project_dir"
 
           (cd "$project_dir" && unlink_all_tools "$project_dir" 2> /dev/null || true)
 

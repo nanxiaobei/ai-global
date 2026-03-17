@@ -52,7 +52,7 @@ ai-global
 1. 检测当前目录（系统或项目）
 2. 扫描已安装的 AI 工具
 3. 备份原始配置到 `.ai-global/backups/`
-4. 合并检测到的工具的 AGENTS.md/skills/agents/rules/commands
+4. 合并检测到的工具的 AGENTS.md/skills/rules/commands
 5. 创建从各工具配置到共享目录的软链
 
 ### 命令列表
@@ -90,7 +90,6 @@ ai-global add https://github.com/user/repo
 ~/.ai-global/
 ├── AGENTS.md        <- 共享 AGENTS.md（编辑这个）
 ├── skills/          <- 共享技能（从所有工具合并）
-├── agents/          <- 共享代理
 ├── rules/           <- 共享规则
 ├── commands/        <- 共享斜杠命令
 └── backups/         <- 原始配置（备份）
@@ -114,7 +113,6 @@ my-project/
 ├── .ai-global/          <- 项目特定配置
 │   ├── AGENTS.md        <- 项目 AGENTS.md
 │   ├── skills/          <- 项目技能
-│   ├── agents/          <- 项目代理
 │   ├── rules/           <- 项目规则
 │   ├── commands/        <- 项目命令
 │   └── backups/         <- 项目备份
@@ -142,34 +140,34 @@ my-project/
 
 ## 支持的工具
 
-| 工具           | Key           | AGENTS.md | Rules | Commands | Skills | Agents |
-| -------------- | ------------- | :-------: | :---: | :------: | :----: | :----: |
-| Claude Code    | `claude`      |     ✓     |       |    ✓     |   ✓    |   ✓    |
-| OpenAI Codex   | `codex`       |     ✓     |   ✓   |          |   ✓    |   ✓    |
-| Cursor         | `cursor`      |     ✓     |   ✓   |    ✓     |   ✓    |   ✓    |
-| Factory Droid  | `droid`       |     ✓     |   ✓   |    ✓     |   ✓    |   ✓    |
-| Amp            | `amp`         |     ✓     |   ✓   |    ✓     |   ✓    |        |
-| Antigravity    | `antigravity` |     ✓     |       |          |   ✓    |        |
-| Gemini CLI     | `gemini`      |     ✓     |       |          |   ✓    |        |
-| Kiro CLI       | `kiro`        |     ✓     |   ✓   |          |   ✓    |   ✓    |
-| OpenCode       | `opencode`    |     ✓     |       |    ✓     |   ✓    |   ✓    |
-| Qoder          | `qoder`       |     ✓     |   ✓   |    ✓     |   ✓    |   ✓    |
-| Qodo           | `qodo`        |     ✓     |       |          |        |   ✓    |
-| GitHub Copilot | `copilot`     |     ✓     |       |          |   ✓    |   ✓    |
-| Continue       | `continue`    |     ✓     |   ✓   |          |        |        |
-| Windsurf       | `windsurf`    |     ✓     |   ✓   |          |   ✓    |        |
-| Roo Code       | `roo`         |     ✓     |   ✓   |    ✓     |   ✓    |        |
-| Cline          | `cline`       |     ✓     |   ✓   |          |   ✓    |        |
-| Blackbox AI    | `blackbox`    |           |       |          |   ✓    |        |
-| Goose AI       | `goose`       |     ✓     |       |          |   ✓    |        |
-| Augment        | `augment`     |     ✓     |   ✓   |    ✓     |        |   ✓    |
-| Clawdbot Code  | `clawdbot`    |     ✓     |       |          |   ✓    |   ✓    |
-| Command Code   | `commandcode` |     ✓     |       |    ✓     |   ✓    |        |
-| Kilo Code      | `kilocode`    |     ✓     |   ✓   |    ✓     |   ✓    |        |
-| Neovate        | `neovate`     |     ✓     |       |    ✓     |   ✓    |   ✓    |
-| OpenHands      | `openhands`   |     ✓     |       |          |   ✓    |        |
-| TRAE           | `trae`        |     ✓     |   ✓   |          |   ✓    |        |
-| Zencoder       | `zencoder`    |     ✓     |   ✓   |          |   ✓    |        |
+| 工具           | Key           | AGENTS.md | Rules | Commands | Skills |
+| -------------- | ------------- | :-------: | :---: | :------: | :----: |
+| Claude Code    | `claude`      |     ✓     |       |    ✓     |   ✓    |
+| OpenAI Codex   | `codex`       |     ✓     |   ✓   |          |   ✓    |
+| Cursor         | `cursor`      |     ✓     |   ✓   |    ✓     |   ✓    |
+| Factory Droid  | `droid`       |     ✓     |   ✓   |    ✓     |   ✓    |
+| Amp            | `amp`         |     ✓     |   ✓   |    ✓     |   ✓    |
+| Antigravity    | `antigravity` |     ✓     |       |          |   ✓    |
+| Gemini CLI     | `gemini`      |     ✓     |       |          |   ✓    |
+| Kiro CLI       | `kiro`        |     ✓     |   ✓   |          |   ✓    |
+| OpenCode       | `opencode`    |     ✓     |       |    ✓     |   ✓    |
+| Qoder          | `qoder`       |     ✓     |   ✓   |    ✓     |   ✓    |
+| Qodo           | `qodo`        |     ✓     |       |          |        |
+| GitHub Copilot | `copilot`     |     ✓     |       |          |   ✓    |
+| Continue       | `continue`    |     ✓     |   ✓   |          |        |
+| Windsurf       | `windsurf`    |     ✓     |   ✓   |          |   ✓    |
+| Roo Code       | `roo`         |     ✓     |   ✓   |    ✓     |   ✓    |
+| Cline          | `cline`       |     ✓     |   ✓   |          |   ✓    |
+| Blackbox AI    | `blackbox`    |           |       |          |   ✓    |
+| Goose AI       | `goose`       |     ✓     |       |          |   ✓    |
+| Augment        | `augment`     |     ✓     |   ✓   |    ✓     |        |
+| Clawdbot Code  | `clawdbot`    |     ✓     |       |          |   ✓    |
+| Command Code   | `commandcode` |     ✓     |       |    ✓     |   ✓    |
+| Kilo Code      | `kilocode`    |     ✓     |   ✓   |    ✓     |   ✓    |
+| Neovate        | `neovate`     |     ✓     |       |    ✓     |   ✓    |
+| OpenHands      | `openhands`   |     ✓     |       |          |   ✓    |
+| TRAE           | `trae`        |     ✓     |   ✓   |          |   ✓    |
+| Zencoder       | `zencoder`    |     ✓     |   ✓   |          |   ✓    |
 
 ## 卸载
 
