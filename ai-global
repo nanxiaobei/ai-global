@@ -4,7 +4,7 @@
 # https://github.com/nanxiaobei/ai-global
 
 # Version
-VERSION="2.7.0"
+VERSION="2.8.0"
 
 # Known AI tool patterns
 # Format: nodes|key|name|agents_md|rules|commands|skills|color
@@ -157,13 +157,9 @@ update_links() {
                     echo "" >> "$target_dir"
                   fi
                 else
-                  # Copy all files (overwrite if exists), excluding hidden files and files in hidden dirs
-                  find "$type_dir" -type f -not -name '.*' -print0 2> /dev/null | while IFS= read -r -d '' file_dir; do
+                  # Copy all files (overwrite if exists)
+                  find "$type_dir" -type f -print0 2> /dev/null | while IFS= read -r -d '' file_dir; do
                     local rel_path="${file_dir#$type_dir/}"
-                    # Skip if path contains any hidden directory component (at start or after /)
-                    if [[ "$rel_path" =~ (^|/)\.[^/]+(/|$) ]]; then
-                      continue
-                    fi
                     local target_file="$target_dir/$rel_path"
                     mkdir -p "$(dirname "$target_file")" 2> /dev/null
                     cp "$file_dir" "$target_file" 2> /dev/null || true
