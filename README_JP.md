@@ -10,6 +10,37 @@
 
 **システムモード**と**プロジェクトモード**の両方に対応。
 
+## サポートされているツール
+
+| ツール                                                | Key           | AGENTS.md | Rules | Commands | Skills |
+| ----------------------------------------------------- | ------------- | :-------: | :---: | :------: | :----: |
+| [Claude Code](https://claude.com/product/claude-code) | `claude`      |     ✓     |       |    ✓     |   ✓    |
+| [OpenAI Codex](https://openai.com/codex/)             | `codex`       |     ✓     |   ✓   |          |   ✓    |
+| [Cursor](https://cursor.com/)                         | `cursor`      |     ✓     |   ✓   |    ✓     |   ✓    |
+| [Factory Droid](https://factory.ai/)                  | `droid`       |     ✓     |   ✓   |    ✓     |   ✓    |
+| [Amp](https://ampcode.com/)                           | `amp`         |     ✓     |   ✓   |    ✓     |   ✓    |
+| [Antigravity](https://antigravity.google/)            | `antigravity` |     ✓     |       |          |   ✓    |
+| [Gemini CLI](https://geminicli.com/)                  | `gemini`      |     ✓     |       |          |   ✓    |
+| [Kiro](https://kiro.dev/)                             | `kiro`        |     ✓     |   ✓   |          |   ✓    |
+| [OpenCode](https://opencode.ai/)                      | `opencode`    |     ✓     |       |    ✓     |   ✓    |
+| [Qoder](https://qoder.com/)                           | `qoder`       |     ✓     |   ✓   |    ✓     |   ✓    |
+| [Qodo](https://www.qodo.ai/)                          | `qodo`        |     ✓     |       |          |        |
+| [GitHub Copilot](https://github.com/features/copilot) | `copilot`     |     ✓     |       |          |   ✓    |
+| [Continue](https://www.continue.dev/)                 | `continue`    |     ✓     |   ✓   |          |        |
+| [Windsurf](https://windsurf.com/)                     | `windsurf`    |     ✓     |   ✓   |          |   ✓    |
+| [Roo Code](https://roocode.com/)                      | `roo`         |     ✓     |   ✓   |    ✓     |   ✓    |
+| [Cline](https://cline.bot/)                           | `cline`       |     ✓     |   ✓   |          |   ✓    |
+| [Blackbox AI](https://www.blackbox.ai/)               | `blackbox`    |           |       |          |   ✓    |
+| [Goose AI](https://goose.ai/)                         | `goose`       |     ✓     |       |          |   ✓    |
+| [Augment](https://www.augmentcode.com/)               | `augment`     |     ✓     |   ✓   |    ✓     |        |
+| [OpenClaw](https://openclaw.ai/)                      | `openclaw`    |     ✓     |       |          |   ✓    |
+| [Command Code](https://commandcode.ai/)               | `commandcode` |     ✓     |       |    ✓     |   ✓    |
+| [Kilo Code](https://kilo.ai/)                         | `kilocode`    |     ✓     |   ✓   |    ✓     |   ✓    |
+| [Neovate](https://neovateai.dev/)                     | `neovate`     |     ✓     |       |    ✓     |   ✓    |
+| [OpenHands](https://openhands.dev/)                   | `openhands`   |     ✓     |       |          |   ✓    |
+| [TRAE](https://www.trae.ai/)                          | `trae`        |     ✓     |   ✓   |          |   ✓    |
+| [Zencoder](https://zencoder.ai/)                      | `zencoder`    |     ✓     |   ✓   |          |   ✓    |
+
 ## インストール
 
 `curl` または `npm` を使用してインストールします：
@@ -34,14 +65,7 @@ bun add -g ai-global
 
 ## 使い方
 
-### 自動モード検出
-
-AI Globalは自動的にコンテキストを検出します：
-
-- **システムモード**：`~`ディレクトリから実行時、システム全体の統一設定
-- **プロジェクトモード**：任意のプロジェクトディレクトリ（`~`以外）から実行時、プロジェクト固有の統一設定
-
-### 初回実行
+実行：
 
 ```bash
 ai-global
@@ -49,38 +73,43 @@ ai-global
 
 これにより：
 
-1. 現在のディレクトリを検出（システムまたはプロジェクト）
+1. 現在のディレクトリコンテキストを検出（システムまたはプロジェクト）
 2. インストールされている AI ツールをスキャン
-3. 元の設定を `.ai-global/backups/` にバックアップ
-4. 検出されたツールの AGENTS.md/skills/rules/commands をマージ
-5. 各ツールの設定から共有ディレクトリへのシンボリックリンクを作成
+3. 元の設定を `.ai-global/backups` にバックアップ
+4. 検出されたツールの `AGENTS.md` `skills` `rules` `commands` を `.ai-global` 共有設定にマージ
+5. 各ツールから `.ai-global` 共有設定へのシンボリックリンクを作成
 
-### コマンド一覧
+### コンテキスト
 
-| コマンド                    | 説明                                                   | コンテキスト対応 |
-| --------------------------- | ------------------------------------------------------ | ---------------- |
-| `ai-global`                 | スキャン、マージ、シンボリックリンク更新（デフォルト） | はい             |
-| `ai-global status`          | シンボリックリンクの状態を表示                         | はい             |
-| `ai-global list`            | サポートされているツールを一覧表示                     | はい             |
-| `ai-global backups`         | 利用可能なバックアップを一覧表示                       | はい             |
-| `ai-global unlink <key>`    | 特定のツールの元の設定を復元                           | はい             |
-| `ai-global unlink all`      | すべてのツールを復元                                   | はい             |
-| `ai-global add <user/repo>` | スキルを追加                                           | はい             |
-| `ai-global upgrade`         | 最新バージョンにアップグレード                         |                  |
-| `ai-global uninstall`       | 完全にアンインストール                                 |                  |
-| `ai-global version`         | バージョン番号を表示                                   |                  |
-| `ai-global help`            | ヘルプを表示                                           |                  |
+- **システムモード**：`~`ディレクトリから実行時、システム全体の統一設定
+- **プロジェクトモード**：任意のプロジェクトディレクトリ（`~`以外）から実行時、プロジェクト固有の統一設定
 
-**コンテキスト対応**：コマンドの動作は現在のディレクトリ（システム vs プロジェクト）に依存します
+## コマンド
 
-### スキルを追加
+| コマンド                    | 説明                                 | コンテキスト対応 |
+| --------------------------- | ------------------------------------ | ---------------- |
+| `ai-global`                 | シンボリックリンク更新（デフォルト） | はい             |
+| `ai-global status`          | シンボリックリンク状態を表示         | はい             |
+| `ai-global list`            | サポートされているツールを一覧表示   | はい             |
+| `ai-global backups`         | 利用可能なバックアップを一覧表示     | はい             |
+| `ai-global unlink <key>`    | ツールの元の設定を復元               | はい             |
+| `ai-global unlink all`      | すべてのツールを復元                 | はい             |
+| `ai-global add <user/repo>` | GitHub から skills を追加            | はい             |
+| `ai-global upgrade`         | 最新バージョンにアップグレード       |                  |
+| `ai-global uninstall`       | 完全にアンインストール               |                  |
+| `ai-global version`         | バージョンを表示                     |                  |
+| `ai-global help`            | ヘルプを表示                         |                  |
+
+**コンテキスト対応**：コマンドの動作は現在のディレクトリ（システムまたはプロジェクト）に依存します
+
+### Skills を追加
 
 ```bash
 ai-global add user/repo
 ai-global add https://github.com/user/repo
 ```
 
-スキルはダウンロードされ、あなたの `.ai-global/skills/` ディレクトリに追加されます。
+Skills はあなたの `.ai-global/skills` に追加され、各ツールに自動的に共有されます（シンボリックリンクのため）。
 
 ## 動作原理
 
@@ -88,11 +117,11 @@ ai-global add https://github.com/user/repo
 
 ```
 ~/.ai-global/
-├── AGENTS.md        <- 共有 AGENTS.md（これを編集）
-├── skills/          <- 共有スキル（すべてのツールからマージ）
-├── rules/           <- 共有ルール
-├── commands/        <- 共有スラッシュコマンド
-└── backups/         <- 元の設定（バックアップ）
+├── AGENTS.md        <- システム共有 AGENTS.md
+├── skills/          <- システム共有 skills
+├── rules/           <- システム共有 rules
+├── commands/        <- システム共有 commands
+└── backups/         <- 元のツール設定のバックアップ
 
 ~/.claude/
 ├── CLAUDE.md -> ~/.ai-global/AGENTS.md        (シンボリックリンク)
@@ -110,64 +139,35 @@ ai-global add https://github.com/user/repo
 
 ```
 my-project/
-├── .ai-global/          <- プロジェクト固有の設定
-│   ├── AGENTS.md        <- プロジェクト AGENTS.md
-│   ├── skills/          <- プロジェクトスキル
-│   ├── rules/           <- プロジェクトルール
-│   ├── commands/        <- プロジェクトコマンド
-│   └── backups/         <- プロジェクトバックアップ
-└── .cursor/             <- AIツール設定
+├── .ai-global/
+│   ├── AGENTS.md        <- プロジェクト共有 AGENTS.md
+│   ├── skills/          <- プロジェクト共有 skills
+│   ├── rules/           <- プロジェクト共有 rules
+│   ├── commands/        <- プロジェクト共有 commands
+│   └── backups/         <- 元のツール設定のバックアップ
+└── .cursor/
     ├── AGENTS.md -> ../.ai-global/AGENTS.md   (シンボリックリンク)
     └── skills/   -> ../.ai-global/skills/     (シンボリックリンク)
+
+    ... その他のツール
 ```
 
-### モードの動作
+### モード動作
 
-- **システムモード**：システム全体の AI 設定を管理
-- **プロジェクトモード**：特定のプロジェクトの AI 設定のみを管理
-- **自動検出**：コマンドなしでモードを切り替え可能
-- **コンテキスト対応**：コマンドが操作中のコンテキストを表示
+- **システムモード**：システム用の AI ツール設定を管理
+- **プロジェクトモード**：プロジェクト用の AI ツール設定を管理
+- **自動検出**：切り替えにコマンドは不要
+- **コンテキスト対応**：コマンドはどのコンテキストで動作しているかを表示
 
 ### マージ動作
 
-`ai-global` を実行すると、ファイル名に基づいてすべてのツールの内容をマージします：
+`ai-global` を実行すると、ファイル名ですべてのツールの項目をマージします：
 
-- Cursor のスキル: `react/`, `typescript/`
-- Claude のスキル: `typescript/`, `python/`
-- マージ結果 `.ai-global/skills/`: `react/`, `typescript/`, `python/`
+- Cursor は skills: `react/`, `typescript/`
+- Claude は skills: `typescript/`, `python/`
+- 結果 `.ai-global/skills`: `react/`, `typescript/`, `python/`
 
-**最後に見つかったファイルが優先されます**（後のツールが同名ファイルを上書きします）。
-
-## サポートされているツール
-
-| ツール         | Key           | AGENTS.md | Rules | Commands | Skills |
-| -------------- | ------------- | :-------: | :---: | :------: | :----: |
-| Claude Code    | `claude`      |     ✓     |       |    ✓     |   ✓    |
-| OpenAI Codex   | `codex`       |     ✓     |   ✓   |          |   ✓    |
-| Cursor         | `cursor`      |     ✓     |   ✓   |    ✓     |   ✓    |
-| Factory Droid  | `droid`       |     ✓     |   ✓   |    ✓     |   ✓    |
-| Amp            | `amp`         |     ✓     |   ✓   |    ✓     |   ✓    |
-| Antigravity    | `antigravity` |     ✓     |       |          |   ✓    |
-| Gemini CLI     | `gemini`      |     ✓     |       |          |   ✓    |
-| Kiro CLI       | `kiro`        |     ✓     |   ✓   |          |   ✓    |
-| OpenCode       | `opencode`    |     ✓     |       |    ✓     |   ✓    |
-| Qoder          | `qoder`       |     ✓     |   ✓   |    ✓     |   ✓    |
-| Qodo           | `qodo`        |     ✓     |       |          |        |
-| GitHub Copilot | `copilot`     |     ✓     |       |          |   ✓    |
-| Continue       | `continue`    |     ✓     |   ✓   |          |        |
-| Windsurf       | `windsurf`    |     ✓     |   ✓   |          |   ✓    |
-| Roo Code       | `roo`         |     ✓     |   ✓   |    ✓     |   ✓    |
-| Cline          | `cline`       |     ✓     |   ✓   |          |   ✓    |
-| Blackbox AI    | `blackbox`    |           |       |          |   ✓    |
-| Goose AI       | `goose`       |     ✓     |       |          |   ✓    |
-| Augment        | `augment`     |     ✓     |   ✓   |    ✓     |        |
-| Clawdbot Code  | `clawdbot`    |     ✓     |       |          |   ✓    |
-| Command Code   | `commandcode` |     ✓     |       |    ✓     |   ✓    |
-| Kilo Code      | `kilocode`    |     ✓     |   ✓   |    ✓     |   ✓    |
-| Neovate        | `neovate`     |     ✓     |       |    ✓     |   ✓    |
-| OpenHands      | `openhands`   |     ✓     |       |          |   ✓    |
-| TRAE           | `trae`        |     ✓     |   ✓   |          |   ✓    |
-| Zencoder       | `zencoder`    |     ✓     |   ✓   |          |   ✓    |
+**最後のファイルが優先**（後のツールが前のツールと同じファイル名を上書きします）。
 
 ## アンインストール
 
@@ -177,17 +177,9 @@ ai-global uninstall
 
 これにより：
 
-1. すべてのツールの元の設定を復元
-2. `~/.ai-global` ディレクトリを削除
+1. すべてのツールのシンボリックリンクを解除し、元の設定に復元
+2. すべての `.ai-global` ディレクトリを削除
 3. `ai-global` コマンドを削除
-
-npm でインストールした場合：
-
-```bash
-ai-global uninstall
-
-npm uninstall -g ai-global
-```
 
 ## ライセンス
 

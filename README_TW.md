@@ -10,6 +10,37 @@
 
 同時支援**系統模式**和**專案模式**。
 
+## 支援的工具
+
+| 工具                                                  | Key           | AGENTS.md | Rules | Commands | Skills |
+| ----------------------------------------------------- | ------------- | :-------: | :---: | :------: | :----: |
+| [Claude Code](https://claude.com/product/claude-code) | `claude`      |     ✓     |       |    ✓     |   ✓    |
+| [OpenAI Codex](https://openai.com/codex/)             | `codex`       |     ✓     |   ✓   |          |   ✓    |
+| [Cursor](https://cursor.com/)                         | `cursor`      |     ✓     |   ✓   |    ✓     |   ✓    |
+| [Factory Droid](https://factory.ai/)                  | `droid`       |     ✓     |   ✓   |    ✓     |   ✓    |
+| [Amp](https://ampcode.com/)                           | `amp`         |     ✓     |   ✓   |    ✓     |   ✓    |
+| [Antigravity](https://antigravity.google/)            | `antigravity` |     ✓     |       |          |   ✓    |
+| [Gemini CLI](https://geminicli.com/)                  | `gemini`      |     ✓     |       |          |   ✓    |
+| [Kiro](https://kiro.dev/)                             | `kiro`        |     ✓     |   ✓   |          |   ✓    |
+| [OpenCode](https://opencode.ai/)                      | `opencode`    |     ✓     |       |    ✓     |   ✓    |
+| [Qoder](https://qoder.com/)                           | `qoder`       |     ✓     |   ✓   |    ✓     |   ✓    |
+| [Qodo](https://www.qodo.ai/)                          | `qodo`        |     ✓     |       |          |        |
+| [GitHub Copilot](https://github.com/features/copilot) | `copilot`     |     ✓     |       |          |   ✓    |
+| [Continue](https://www.continue.dev/)                 | `continue`    |     ✓     |   ✓   |          |        |
+| [Windsurf](https://windsurf.com/)                     | `windsurf`    |     ✓     |   ✓   |          |   ✓    |
+| [Roo Code](https://roocode.com/)                      | `roo`         |     ✓     |   ✓   |    ✓     |   ✓    |
+| [Cline](https://cline.bot/)                           | `cline`       |     ✓     |   ✓   |          |   ✓    |
+| [Blackbox AI](https://www.blackbox.ai/)               | `blackbox`    |           |       |          |   ✓    |
+| [Goose AI](https://goose.ai/)                         | `goose`       |     ✓     |       |          |   ✓    |
+| [Augment](https://www.augmentcode.com/)               | `augment`     |     ✓     |   ✓   |    ✓     |        |
+| [OpenClaw](https://openclaw.ai/)                      | `openclaw`    |     ✓     |       |          |   ✓    |
+| [Command Code](https://commandcode.ai/)               | `commandcode` |     ✓     |       |    ✓     |   ✓    |
+| [Kilo Code](https://kilo.ai/)                         | `kilocode`    |     ✓     |   ✓   |    ✓     |   ✓    |
+| [Neovate](https://neovateai.dev/)                     | `neovate`     |     ✓     |       |    ✓     |   ✓    |
+| [OpenHands](https://openhands.dev/)                   | `openhands`   |     ✓     |       |          |   ✓    |
+| [TRAE](https://www.trae.ai/)                          | `trae`        |     ✓     |   ✓   |          |   ✓    |
+| [Zencoder](https://zencoder.ai/)                      | `zencoder`    |     ✓     |   ✓   |          |   ✓    |
+
 ## 安裝
 
 使用 `curl` 或 `npm` 安裝：
@@ -34,14 +65,7 @@ bun add -g ai-global
 
 ## 使用方法
 
-### 自動模式偵測
-
-AI Global 會自動偵測你的上下文：
-
-- **系統模式**：當從 `~` 目錄執行時，為系統範圍統一設定
-- **專案模式**：當從任何專案目錄（非 `~`）執行時，為專案特定統一設定
-
-### 首次執行
+執行：
 
 ```bash
 ai-global
@@ -49,50 +73,55 @@ ai-global
 
 這將會：
 
-1. 偵測當前目錄（系統或專案）
+1. 偵測當前目錄上下文（系統或專案）
 2. 掃描已安裝的 AI 工具
-3. 備份原始設定到 `.ai-global/backups/`
-4. 合併偵測到的工具的 AGENTS.md/skills/rules/commands
-5. 建立從各工具設定到共享目錄的符號連結
+3. 備份原始設定到 `.ai-global/backups`
+4. 將偵測到的工具的 `AGENTS.md` `skills` `rules` `commands` 合併到 `.ai-global` 共享設定
+5. 建立從各工具到 `.ai-global` 共享設定的符號連結
 
-### 指令列表
+### 上下文
 
-| 指令                        | 說明                             | 上下文感知 |
-| --------------------------- | -------------------------------- | ---------- |
-| `ai-global`                 | 掃描、合併、更新符號連結（預設） | 是         |
-| `ai-global status`          | 顯示符號連結狀態                 | 是         |
-| `ai-global list`            | 列出支援的工具                   | 是         |
-| `ai-global backups`         | 列出可用的備份                   | 是         |
-| `ai-global unlink <key>`    | 還原某個工具的原始設定           | 是         |
-| `ai-global unlink all`      | 還原所有工具                     | 是         |
-| `ai-global add <user/repo>` | 新增技能                         | 是         |
-| `ai-global upgrade`         | 升級到最新版本                   |            |
-| `ai-global uninstall`       | 完整解除安裝                     |            |
-| `ai-global version`         | 顯示版本號                       |            |
-| `ai-global help`            | 顯示說明                         |            |
+- **系統模式**：當從 `~` 目錄執行時，為系統範圍統一設定
+- **專案模式**：當從任何專案目錄（非 `~`）執行時，為專案特定統一設定
 
-**上下文感知**：指令行為取決於當前目錄（系統 vs 專案）
+## 指令
 
-### 新增技能
+| 指令                        | 說明                   | 上下文感知 |
+| --------------------------- | ---------------------- | ---------- |
+| `ai-global`                 | 更新符號連結（預設）   | 是         |
+| `ai-global status`          | 顯示符號連結狀態       | 是         |
+| `ai-global list`            | 列出支援的工具         | 是         |
+| `ai-global backups`         | 列出可用的備份         | 是         |
+| `ai-global unlink <key>`    | 還原某個工具的原始設定 | 是         |
+| `ai-global unlink all`      | 還原所有工具           | 是         |
+| `ai-global add <user/repo>` | 從 GitHub 新增 skills  | 是         |
+| `ai-global upgrade`         | 升級到最新版本         |            |
+| `ai-global uninstall`       | 完整移除 ai-global     |            |
+| `ai-global version`         | 顯示版本               |            |
+| `ai-global help`            | 顯示說明               |            |
+
+**上下文感知**：指令行為取決於當前目錄（系統或專案）
+
+### 新增 Skills
 
 ```bash
 ai-global add user/repo
 ai-global add https://github.com/user/repo
 ```
 
-技能將被下載並新增到你的 `.ai-global/skills/` 目錄。
+Skills 將被新增到你的 `.ai-global/skills`，並自動共享到每個工具（因為符號連結）。
 
-## 運作原理
+## 工作原理
 
 ### 系統模式結構
 
 ```
 ~/.ai-global/
-├── AGENTS.md        <- 共享 AGENTS.md（編輯這個）
-├── skills/          <- 共享技能（從所有工具合併）
-├── rules/           <- 共享規則
-├── commands/        <- 共享斜線指令
-└── backups/         <- 原始設定（備份）
+├── AGENTS.md        <- 系統共享 AGENTS.md
+├── skills/          <- 系統共享 skills
+├── rules/           <- 系統共享 rules
+├── commands/        <- 系統共享 commands
+└── backups/         <- 原始工具設定的備份
 
 ~/.claude/
 ├── CLAUDE.md -> ~/.ai-global/AGENTS.md        (符號連結)
@@ -110,64 +139,35 @@ ai-global add https://github.com/user/repo
 
 ```
 my-project/
-├── .ai-global/          <- 專案特定設定
-│   ├── AGENTS.md        <- 專案 AGENTS.md
-│   ├── skills/          <- 專案技能
-│   ├── rules/           <- 專案規則
-│   ├── commands/        <- 專案指令
-│   └── backups/         <- 專案備份
-└── .cursor/             <- AI 工具設定
+├── .ai-global/
+│   ├── AGENTS.md        <- 專案共享 AGENTS.md
+│   ├── skills/          <- 專案共享 skills
+│   ├── rules/           <- 專案共享 rules
+│   ├── commands/        <- 專案共享 commands
+│   └── backups/         <- 原始工具設定的備份
+└── .cursor/
     ├── AGENTS.md -> ../.ai-global/AGENTS.md   (符號連結)
     └── skills/   -> ../.ai-global/skills/     (符號連結)
+
+    ... 以及更多工具
 ```
 
 ### 模式行為
 
-- **系統模式**：管理整個系統的 AI 設定
-- **專案模式**：僅管理特定專案的 AI 設定
-- **自動偵測**：無需指令即可切換模式
+- **系統模式**：管理系統 AI 工具設定
+- **專案模式**：管理專案 AI 工具設定
+- **自動偵測**：無需指令即可切換
 - **上下文感知**：指令將顯示它們正在操作的上下文
 
 ### 合併行為
 
-執行 `ai-global` 時，會按檔案名稱合併所有工具的內容：
+當你執行 `ai-global` 時，它會按檔案名合併所有工具的項目：
 
 - Cursor 有 skills: `react/`, `typescript/`
 - Claude 有 skills: `typescript/`, `python/`
-- 合併結果 `.ai-global/skills/`: `react/`, `typescript/`, `python/`
+- 結果在 `.ai-global/skills`: `react/`, `typescript/`, `python/`
 
-**最後找到的檔案優先**（後找到的工具會覆蓋同名檔案）。
-
-## 支援的工具
-
-| 工具           | Key           | AGENTS.md | Rules | Commands | Skills |
-| -------------- | ------------- | :-------: | :---: | :------: | :----: |
-| Claude Code    | `claude`      |     ✓     |       |    ✓     |   ✓    |
-| OpenAI Codex   | `codex`       |     ✓     |   ✓   |          |   ✓    |
-| Cursor         | `cursor`      |     ✓     |   ✓   |    ✓     |   ✓    |
-| Factory Droid  | `droid`       |     ✓     |   ✓   |    ✓     |   ✓    |
-| Amp            | `amp`         |     ✓     |   ✓   |    ✓     |   ✓    |
-| Antigravity    | `antigravity` |     ✓     |       |          |   ✓    |
-| Gemini CLI     | `gemini`      |     ✓     |       |          |   ✓    |
-| Kiro CLI       | `kiro`        |     ✓     |   ✓   |          |   ✓    |
-| OpenCode       | `opencode`    |     ✓     |       |    ✓     |   ✓    |
-| Qoder          | `qoder`       |     ✓     |   ✓   |    ✓     |   ✓    |
-| Qodo           | `qodo`        |     ✓     |       |          |        |
-| GitHub Copilot | `copilot`     |     ✓     |       |          |   ✓    |
-| Continue       | `continue`    |     ✓     |   ✓   |          |        |
-| Windsurf       | `windsurf`    |     ✓     |   ✓   |          |   ✓    |
-| Roo Code       | `roo`         |     ✓     |   ✓   |    ✓     |   ✓    |
-| Cline          | `cline`       |     ✓     |   ✓   |          |   ✓    |
-| Blackbox AI    | `blackbox`    |           |       |          |   ✓    |
-| Goose AI       | `goose`       |     ✓     |       |          |   ✓    |
-| Augment        | `augment`     |     ✓     |   ✓   |    ✓     |        |
-| Clawdbot Code  | `clawdbot`    |     ✓     |       |          |   ✓    |
-| Command Code   | `commandcode` |     ✓     |       |    ✓     |   ✓    |
-| Kilo Code      | `kilocode`    |     ✓     |   ✓   |    ✓     |   ✓    |
-| Neovate        | `neovate`     |     ✓     |       |    ✓     |   ✓    |
-| OpenHands      | `openhands`   |     ✓     |       |          |   ✓    |
-| TRAE           | `trae`        |     ✓     |   ✓   |          |   ✓    |
-| Zencoder       | `zencoder`    |     ✓     |   ✓   |          |   ✓    |
+**最後檔案獲勝**（後面的工具會覆蓋與前面工具同名的檔案）。
 
 ## 解除安裝
 
@@ -177,18 +177,10 @@ ai-global uninstall
 
 這將會：
 
-1. 還原所有工具的原始設定
-2. 刪除 `~/.ai-global` 目錄
+1. 取消所有工具的符號連結，恢復到它們的原始設定
+2. 刪除所有 `.ai-global` 目錄
 3. 移除 `ai-global` 指令
 
-如果透過 npm 安裝：
-
-```bash
-ai-global uninstall
-
-npm uninstall -g ai-global
-```
-
-## 授權條款
+## 授權
 
 MIT
