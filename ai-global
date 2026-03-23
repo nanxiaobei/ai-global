@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# AI Global: Unified AI Tools Configuration Manager
+# AI Global: Unified Config Manager for AI Coding Tools
 # https://github.com/nanxiaobei/ai-global
 
 # Version
@@ -759,7 +759,7 @@ uninstall() {
           (cd "$project_dir" && unlink_all_tools "$project_dir" 2> /dev/null || true)
 
           rm -rf "$project_dir/.ai-global"
-          log_ok "Removed project configuration: $(beautify_dir "$project_dir/.ai-global")"
+          log_ok "Removed project config: $(beautify_dir "$project_dir/.ai-global")"
           echo ""
 
           ((project_count++))
@@ -777,7 +777,7 @@ uninstall() {
   [[ -L "$HOME/.local/bin/ai-global" ]] && rm -f "$HOME/.local/bin/ai-global"
 
   rm -rf "$HOME/.ai-global"
-  log_ok "Removed system configuration: $(beautify_dir "$HOME/.ai-global")"
+  log_ok "Removed system config: $(beautify_dir "$HOME/.ai-global")"
 
   log_ok "AI Global uninstalled successfully"
   echo ""
@@ -790,7 +790,7 @@ show_version() {
 
 # Show help
 show_help() {
-  echo -e "${BLUE}AI Global: Unified AI Tools Configuration Manager${NC} v$VERSION"
+  echo -e "${BLUE}AI Global: Unified Config Manager for AI Coding Tools${NC} v$VERSION"
   echo ""
   echo -e "${BLUE}USAGE:${NC}"
   echo -e "  ai-global [command]"
