@@ -4,7 +4,7 @@
 # https://github.com/nanxiaobei/ai-global
 
 # Version
-VERSION="2.9.0"
+VERSION="2.10.0"
 
 # Known AI tool patterns
 # Format: nodes|key|name|agents_md|rules|commands|skills|color
