@@ -86,19 +86,19 @@ ai-global
 
 ## 命令
 
-| 命令                        | 说明                   | 上下文感知 |
-| --------------------------- | ---------------------- | ---------- |
-| `ai-global`                 | 更新软链（默认）       | 是         |
-| `ai-global status`          | 显示软链状态           | 是         |
-| `ai-global list`            | 列出支持的工具         | 是         |
-| `ai-global backups`         | 列出可用的备份         | 是         |
-| `ai-global unlink <key>`    | 恢复某个工具的原始配置 | 是         |
-| `ai-global unlink all`      | 恢复所有工具           | 是         |
-| `ai-global add <user/repo>` | 从 GitHub 添加 skills  | 是         |
-| `ai-global upgrade`         | 升级到最新版本         |            |
-| `ai-global uninstall`       | 彻底移除 ai-global     |            |
-| `ai-global version`         | 显示版本               |            |
-| `ai-global help`            | 显示帮助               |            |
+```bash
+ai-global                   # 更新软链（默认）
+ai-global status            # 显示软链状态
+ai-global list              # 列出支持的工具
+ai-global backups           # 列出可用的备份
+ai-global unlink <key>      # 恢复某个工具的原始配置
+ai-global unlink all        # 恢复所有工具
+ai-global add <user/repo>   # 从 GitHub 添加 skills
+ai-global upgrade           # 升级到最新版本
+ai-global uninstall         # 彻底移除 ai-global
+ai-global version           # 显示版本
+ai-global help              # 显示帮助
+```
 
 **上下文感知**：命令行为取决于当前目录（系统或项目）
 

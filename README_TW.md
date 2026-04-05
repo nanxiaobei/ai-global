@@ -86,19 +86,19 @@ ai-global
 
 ## 指令
 
-| 指令                        | 說明                   | 上下文感知 |
-| --------------------------- | ---------------------- | ---------- |
-| `ai-global`                 | 更新符號連結（預設）   | 是         |
-| `ai-global status`          | 顯示符號連結狀態       | 是         |
-| `ai-global list`            | 列出支援的工具         | 是         |
-| `ai-global backups`         | 列出可用的備份         | 是         |
-| `ai-global unlink <key>`    | 還原某個工具的原始設定 | 是         |
-| `ai-global unlink all`      | 還原所有工具           | 是         |
-| `ai-global add <user/repo>` | 從 GitHub 新增 skills  | 是         |
-| `ai-global upgrade`         | 升級到最新版本         |            |
-| `ai-global uninstall`       | 完整移除 ai-global     |            |
-| `ai-global version`         | 顯示版本               |            |
-| `ai-global help`            | 顯示說明               |            |
+```bash
+ai-global                   # 更新符號連結（預設）
+ai-global status            # 顯示符號連結狀態
+ai-global list              # 列出支援的工具
+ai-global backups           # 列出可用的備份
+ai-global unlink <key>      # 還原某個工具的原始設定
+ai-global unlink all        # 還原所有工具
+ai-global add <user/repo>   # 從 GitHub 新增 skills
+ai-global upgrade           # 升級到最新版本
+ai-global uninstall         # 完整移除 ai-global
+ai-global version           # 顯示版本
+ai-global help              # 顯示說明
+```
 
 **上下文感知**：指令行為取決於當前目錄（系統或專案）
 

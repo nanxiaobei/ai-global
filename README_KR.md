@@ -86,19 +86,19 @@ ai-global
 
 ## 명령어
 
-| 명령어                      | 설명                          | 컨텍스트 인지 |
-| --------------------------- | ----------------------------- | ------------- |
-| `ai-global`                 | 심볼릭 링크 업데이트 (기본값) | 예            |
-| `ai-global status`          | 심볼릭 링크 상태 표시         | 예            |
-| `ai-global list`            | 지원되는 도구 목록 표시       | 예            |
-| `ai-global backups`         | 사용 가능한 백업 목록 표시    | 예            |
-| `ai-global unlink <key>`    | 특정 도구의 원본 설정 복원    | 예            |
-| `ai-global unlink all`      | 모든 도구 복원                | 예            |
-| `ai-global add <user/repo>` | GitHub 에서 skills 추가       | 예            |
-| `ai-global upgrade`         | 최신 버전으로 업그레이드      |               |
-| `ai-global uninstall`       | 완전히 제거                   |               |
-| `ai-global version`         | 버전 표시                     |               |
-| `ai-global help`            | 도움말 표시                   |               |
+```bash
+ai-global                   # 심볼릭 링크 업데이트 (기본값)
+ai-global status            # 심볼릭 링크 상태 표시
+ai-global list              # 지원되는 도구 목록 표시
+ai-global backups           # 사용 가능한 백업 목록 표시
+ai-global unlink <key>      # 특정 도구의 원본 설정 복원
+ai-global unlink all        # 모든 도구 복원
+ai-global add <user/repo>   # GitHub 에서 skills 추가
+ai-global upgrade           # 최신 버전으로 업그레이드
+ai-global uninstall         # 완전히 제거
+ai-global version           # 버전 표시
+ai-global help              # 도움말 표시
+```
 
 **컨텍스트 인지**: 명령어 동작은 현재 디렉토리(시스템 또는 프로젝트)에 따라 달라집니다
 

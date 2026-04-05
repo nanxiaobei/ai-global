@@ -86,19 +86,19 @@ ai-global
 
 ## コマンド
 
-| コマンド                    | 説明                                 | コンテキスト対応 |
-| --------------------------- | ------------------------------------ | ---------------- |
-| `ai-global`                 | シンボリックリンク更新（デフォルト） | はい             |
-| `ai-global status`          | シンボリックリンク状態を表示         | はい             |
-| `ai-global list`            | サポートされているツールを一覧表示   | はい             |
-| `ai-global backups`         | 利用可能なバックアップを一覧表示     | はい             |
-| `ai-global unlink <key>`    | ツールの元の設定を復元               | はい             |
-| `ai-global unlink all`      | すべてのツールを復元                 | はい             |
-| `ai-global add <user/repo>` | GitHub から skills を追加            | はい             |
-| `ai-global upgrade`         | 最新バージョンにアップグレード       |                  |
-| `ai-global uninstall`       | 完全にアンインストール               |                  |
-| `ai-global version`         | バージョンを表示                     |                  |
-| `ai-global help`            | ヘルプを表示                         |                  |
+```bash
+ai-global                   # シンボリックリンク更新（デフォルト）
+ai-global status            # シンボリックリンク状態を表示
+ai-global list              # サポートされているツールを一覧表示
+ai-global backups           # 利用可能なバックアップを一覧表示
+ai-global unlink <key>      # ツールの元の設定を復元
+ai-global unlink all        # すべてのツールを復元
+ai-global add <user/repo>   # GitHub から skills を追加
+ai-global upgrade           # 最新バージョンにアップグレード
+ai-global uninstall         # 完全にアンインストール
+ai-global version           # バージョンを表示
+ai-global help              # ヘルプを表示
+```
 
 **コンテキスト対応**：コマンドの動作は現在のディレクトリ（システムまたはプロジェクト）に依存します
 

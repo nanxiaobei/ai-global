@@ -86,19 +86,19 @@ This will:
 
 ## Commands
 
-| Command                     | Description                      | Context-aware |
-| --------------------------- | -------------------------------- | ------------- |
-| `ai-global`                 | Update symlinks (default)        | Yes           |
-| `ai-global status`          | Show symlinks status             | Yes           |
-| `ai-global list`            | List all supported AI tools      | Yes           |
-| `ai-global backups`         | List available backups           | Yes           |
-| `ai-global unlink <key>`    | Restore a tool's original config | Yes           |
-| `ai-global unlink all`      | Restore all tools                | Yes           |
-| `ai-global add <user/repo>` | Add skills from GitHub repo      | Yes           |
-| `ai-global upgrade`         | Upgrade to latest version        |               |
-| `ai-global uninstall`       | Completely remove ai-global      |               |
-| `ai-global version`         | Show version                     |               |
-| `ai-global help`            | Show help                        |               |
+```bash
+ai-global                   # Update symlinks (default)
+ai-global status            # Show symlinks status
+ai-global list              # List all supported AI tools
+ai-global backups           # List available backups
+ai-global unlink <key>      # Restore a tool's original config
+ai-global unlink all        # Restore all tools
+ai-global add <user/repo>   # Add skills from GitHub repo
+ai-global upgrade           # Upgrade to latest version
+ai-global uninstall         # Completely remove ai-global
+ai-global version           # Show version
+ai-global help              # Show help
+```
 
 **Context-aware**: Command behavior depends on the current directory (system or project)
 
